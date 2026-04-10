@@ -1,0 +1,161 @@
+version: '3.8'
+
+services:
+  # Immich PostgreSQL Database (with pgvector support)
+  immich-db:
+    image: tensorchord/pgvecto-rs:pg16-v0.2.1
+    container_name: immich-db
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_DB: ${DB_NAME:-immich}
+      POSTGRES_INITDB_ARGS: "-c shared_preload_libraries=vectors"
+    volumes:
+      - immich_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Immich Redis Cache
+  immich-redis:
+    image: redis:7-alpine
+    container_name: immich-redis
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Immich Server (API + Web UI)
+  immich-server:
+    image: ghcr.io/immich-app/immich-server:latest
+    container_name: immich-server
+    depends_on:
+      immich-db:
+        condition: service_healthy
+      immich-redis:
+        condition: service_healthy
+    environment:
+      DB_HOSTNAME: immich-db
+      DB_USERNAME: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      DB_NAME: ${DB_NAME:-immich}
+      REDIS_HOSTNAME: immich-redis
+      UPLOAD_LOCATION: ${UPLOAD_LOCATION:-/usr/src/app/upload}
+      IMMICH_PORT: 3001
+      IMMICH_MEDIA_LOCATION: ${UPLOAD_LOCATION:-/usr/src/app/upload}
+      TZ: Europe/Istanbul
+    volumes:
+      - ${UPLOAD_LOCATION:-/tmp/immich}:${UPLOAD_LOCATION:-/usr/src/app/upload}
+      - ${EXTERNAL_LIBRARY_PATH:-/tmp/external}:/external-library:ro
+    ports:
+      - "2283:3001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/server/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Immich Microservices (thumbnails, metadata extraction)
+  immich-microservices:
+    image: ghcr.io/immich-app/immich-server:latest
+    container_name: immich-microservices
+    command: start.sh microservices
+    depends_on:
+      immich-db:
+        condition: service_healthy
+      immich-redis:
+        condition: service_healthy
+    environment:
+      DB_HOSTNAME: immich-db
+      DB_USERNAME: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      DB_NAME: ${DB_NAME:-immich}
+      REDIS_HOSTNAME: immich-redis
+      UPLOAD_LOCATION: ${UPLOAD_LOCATION:-/usr/src/app/upload}
+      IMMICH_MEDIA_LOCATION: ${UPLOAD_LOCATION:-/usr/src/app/upload}
+      TZ: Europe/Istanbul
+    volumes:
+      - ${UPLOAD_LOCATION:-/tmp/immich}:${UPLOAD_LOCATION:-/usr/src/app/upload}
+      - ${EXTERNAL_LIBRARY_PATH:-/tmp/external}:/external-library:ro
+    restart: unless-stopped
+    # Machine Learning service intentionally EXCLUDED to save RAM
+    # Facial recognition and CLIP search not needed for hospital barcode archiving
+
+  # n8n Workflow Orchestration
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    depends_on:
+      immich-server:
+        condition: service_healthy
+    environment:
+      N8N_BASIC_AUTH_ACTIVE: "true"
+      N8N_BASIC_AUTH_USER: ${N8N_USER:-admin}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_PASSWORD:-password}
+      N8N_HOST: "0.0.0.0"
+      N8N_PORT: 5678
+      N8N_PROTOCOL: "http"
+      WEBHOOK_TUNNEL_URL: "http://localhost:5678/"
+      TZ: Europe/Istanbul
+      GENERIC_TIMEZONE: Europe/Istanbul
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ${ARCHIVE_PATH:-/tmp/archive}:/archive
+      - ${UNMATCHED_PATH:-/tmp/unmatched}:/unmatched
+      - ${EXTERNAL_LIBRARY_PATH:-/tmp/external}:/external:ro
+    ports:
+      - "5678:5678"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:5678/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Barcode Processing Service (FastAPI + zxing + EasyOCR)
+  barcode-service:
+    build:
+      context: ./barcode-service
+      dockerfile: Dockerfile
+    container_name: barcode-service
+    depends_on:
+      immich-server:
+        condition: service_healthy
+    environment:
+      ARCHIVE_PATH: ${ARCHIVE_PATH:-/archive}
+      UNMATCHED_PATH: ${UNMATCHED_PATH:-/unmatched}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-meta-llama/llama-3.1-8b-instruct}
+      MATCH_WINDOW_MINUTES: ${MATCH_WINDOW_MINUTES:-30}
+      TZ: Europe/Istanbul
+    volumes:
+      - ${ARCHIVE_PATH:-/tmp/archive}:/archive
+      - ${UNMATCHED_PATH:-/tmp/unmatched}:/unmatched
+      - ${UPLOAD_LOCATION:-/tmp/immich}:${UPLOAD_LOCATION:-/usr/src/app/upload}:ro
+      - barcode_db:/app/data
+    ports:
+      - "5001:5000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  immich_db:
+    driver: local
+  n8n_data:
+    driver: local
+  barcode_db:
+    driver: local
+
+networks:
+  default:
+    name: hospital-archive

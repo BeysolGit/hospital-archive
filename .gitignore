@@ -1,0 +1,54 @@
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Docker
+docker-compose.override.yml
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv
+
+# Photos and data
+photos/
+*.jpg
+*.jpeg
+*.png
+*.gif
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+/app/data/
+
+# Node modules
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# n8n
+n8n_data/

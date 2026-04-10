@@ -1,0 +1,397 @@
+{
+  "name": "01 - Poll and Route Photos",
+  "nodes": [
+    {
+      "parameters": {
+        "interval": [
+          {
+            "recurrence": "minutes",
+            "value": 2
+          }
+        ]
+      },
+      "id": "4fed5e96-8f2f-4e79-b6c6-1f1f9a9d9b9b",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.schedule",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://immich-server:3001/api/search/metadata",
+        "method": "POST",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpCustomAuth",
+        "headers": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.IMMICH_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "takenAfter",
+              "value": "={{ $node['Get Timestamp'].json.last_checked || '2024-01-01T00:00:00Z' }}"
+            },
+            {
+              "name": "page",
+              "value": 1
+            },
+            {
+              "name": "size",
+              "value": 100
+            }
+          ]
+        }
+      },
+      "id": "8e6f9c8d-1a2b-4c3d-8e9f-0a1b2c3d4e5f",
+      "name": "Search Photos Since Last Check",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        500,
+        300
+      ],
+      "credentials": {
+        "httpCustomAuth": "immich_api"
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const lastChecked = $getWorkflowStaticData('db').last_checked || new Date('2024-01-01').toISOString();\nreturn [{ last_checked: lastChecked, current_time: new Date().toISOString() }];"
+      },
+      "id": "9f7a8d9c-2e3f-5a6b-9c0d-1e2f3g4h5i6j",
+      "name": "Get Timestamp",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        250,
+        150
+      ]
+    },
+    {
+      "parameters": {
+        "loopOver": "=json"
+      },
+      "id": "a0b1c2d3-e4f5-6a7b-8c9d-0e1f2g3h4i5j",
+      "name": "Loop Over Photos",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 3,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=http://immich-server:3001/api/assets/{{ $json.id }}",
+        "method": "GET",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpCustomAuth",
+        "headers": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.IMMICH_API_KEY }}"
+            }
+          ]
+        }
+      },
+      "id": "b1c2d3e4-f5a6-b7c8-d9e0-1f2g3h4i5j6k",
+      "name": "Get Asset Metadata",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=http://immich-server:3001/api/assets/{{ $json.id }}/original",
+        "method": "GET",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpCustomAuth",
+        "headers": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.IMMICH_API_KEY }}"
+            }
+          ]
+        },
+        "responseFormat": "arraybuffer"
+      },
+      "id": "c2d3e4f5-a6b7-c8d9-e0f1-2g3h4i5j6k7l",
+      "name": "Download Photo Binary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://barcode-service:5000/decode",
+        "authentication": "none",
+        "sendBody": true,
+        "bodyParametersUi": "keyValue",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file",
+              "value": "={{ $binary.data }}"
+            }
+          ]
+        },
+        "bodyContentType": "form-data"
+      },
+      "id": "d3e4f5g6-a7b8-c9d0-e1f2-3g4h5i6j7k8l",
+      "name": "Decode Barcode/OCR",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1500,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": [
+            {
+              "condition": "objectExists",
+              "key": "decoded_text",
+              "value": "={{ $json.decoded_text }}"
+            }
+          ]
+        }
+      },
+      "id": "e4f5g6h7-b8c9-d0e1-f2g3-4h5i6j7k8l9m",
+      "name": "Is Barcode?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        1750,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://barcode-service:5000/parse",
+        "authentication": "none",
+        "sendBody": true,
+        "bodyParametersUi": "keyValue",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file",
+              "value": "={{ $binary.data }}"
+            }
+          ]
+        },
+        "bodyContentType": "form-data"
+      },
+      "id": "f5g6h7i8-c9d0-e1f2-g3h4-5i6j7k8l9m0n",
+      "name": "Parse Barcode (Barcode Path)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2000,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://barcode-service:5000/photo/index",
+        "authentication": "none",
+        "sendBody": true,
+        "bodyParametersUi": "json",
+        "body": "={\n  \"immich_id\": \"{{ $json.id }}\",\n  \"taken_at\": \"{{ $json.fileCreatedAt }}\"\n}"
+      },
+      "id": "g6h7i8j9-d0e1-f2g3-h4i5-6j7k8l9m0n1o",
+      "name": "Index Patient Photo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $baseUrl }}/webhook/barcode-process",
+        "method": "POST",
+        "authentication": "none",
+        "sendBody": true,
+        "bodyParametersUi": "json",
+        "body": "={\n  \"barcode_immich_id\": \"{{ $json.id }}\",\n  \"patient_name\": \"{{ $json.patient_name }}\",\n  \"doctor_name\": \"{{ $json.doctor_name }}\",\n  \"date\": \"{{ $json.date }}\",\n  \"time\": \"{{ $json.time }}\",\n  \"department\": \"{{ $json.department }}\",\n  \"hospital\": \"{{ $json.hospital }}\",\n  \"decode_method\": \"{{ $node['Decode Barcode/OCR'].json.decode_method }}\"\n}"
+      },
+      "id": "h7i8j9k0-e1f2-g3h4-i5j6-7k8l9m0n1o2p",
+      "name": "Trigger Barcode Processing (Webhook)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2250,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Update last checked timestamp in workflow static data\n$setWorkflowStaticData('db', { last_checked: new Date().toISOString() });\nreturn [{ success: true, message: 'Timestamp updated' }];"
+      },
+      "id": "i8j9k0l1-f2g3-h4i5-j6k7-8l9m0n1o2p3q",
+      "name": "Update Last Checked Timestamp",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2500,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Timestamp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Timestamp": {
+      "main": [
+        [
+          {
+            "node": "Search Photos Since Last Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Photos Since Last Check": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Photos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Photos": {
+      "main": [
+        [
+          {
+            "node": "Get Asset Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Asset Metadata": {
+      "main": [
+        [
+          {
+            "node": "Download Photo Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Photo Binary": {
+      "main": [
+        [
+          {
+            "node": "Decode Barcode/OCR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decode Barcode/OCR": {
+      "main": [
+        [
+          {
+            "node": "Is Barcode?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Barcode?": {
+      "main": [
+        [
+          {
+            "node": "Parse Barcode (Barcode Path)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Index Patient Photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Barcode (Barcode Path)": {
+      "main": [
+        [
+          {
+            "node": "Trigger Barcode Processing (Webhook)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Index Patient Photo": {
+      "main": [
+        [
+          {
+            "node": "Update Last Checked Timestamp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger Barcode Processing (Webhook)": {
+      "main": [
+        [
+          {
+            "node": "Update Last Checked Timestamp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "87c7b61c-9ffc-4c86-a6f0-47f27a24c78b"
+}
