@@ -1,106 +1,92 @@
 #!/bin/bash
 
-# Hospital Photo Archiving System - Quick Setup Script
+# 🏥 Hospital Photo Archive - KOLAY KURULUM
+# Web tabanı kurulum arayüzü ile tüm ayarları yap
 
 set -e
 
-echo "🏥 Hospital Photo Archive System - Setup"
-echo "=========================================="
+export TERM=xterm
+
+clear
+
+echo "╔════════════════════════════════════════════════════════════╗"
+echo "║   🏥 Hospital Archive - WEB KURULUM                       ║"
+echo "║                                                            ║"
+echo "║   Tarayıcıdan tüm ayarları yap - Basit ve güvenli        ║"
+echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
 
-# Check if Docker is installed
+# Docker kontrol
+echo "📋 Ön kontroller yapılıyor..."
+
 if ! command -v docker &> /dev/null; then
-    echo "❌ Docker is not installed. Please install Docker first."
+    echo "❌ Docker yüklü değil!"
+    echo "   macOS: brew install docker"
+    echo "   https://www.docker.com/products/docker-desktop"
     exit 1
 fi
 
-echo "✅ Docker found"
-
-# Create necessary directories
+echo "✅ Docker var"
 echo ""
-echo "📁 Creating directories..."
+
+# Klasörleri oluştur
+echo "📁 Klasörler oluşturuluyor..."
 mkdir -p photos/{immich,archive,unmatched,external}
-chmod 777 photos/*
-echo "✅ Directories created"
+mkdir -p logs
+echo "✅ Klasörler oluşturuldu"
 
-# Check if .env exists
 echo ""
-if [ ! -f .env ]; then
-    echo "⚠️  .env file not found"
-    echo "Please copy .env.example to .env and fill in your values:"
-    echo "  - UPLOAD_LOCATION"
-    echo "  - ARCHIVE_PATH"
-    echo "  - OPENROUTER_API_KEY"
-    echo "  - IMMICH_API_KEY (get from Immich web UI after first startup)"
-    exit 1
+echo "╔════════════════════════════════════════════════════════════╗"
+echo "║   🌐 WEB KURULUM ARAYÜZÜ AÇILIYOR                         ║"
+echo "╚════════════════════════════════════════════════════════════╝"
+echo ""
+
+# Port kontrol
+PORT=9000
+if lsof -Pi :$PORT -sTCP:LISTEN -t >/dev/null 2>&1; then
+    echo "⚠️  Port $PORT kullanımda (başka kurulum var?)"
+    read -p "   Farklı port ister misin? (Enter = $PORT): " NEW_PORT
+    if [ -n "$NEW_PORT" ]; then
+        PORT=$NEW_PORT
+    fi
 fi
 
-echo "✅ .env file found"
+# Setup server'ı başlat
+echo "🚀 Setup server başlatılıyor..."
+python3 setup-server.py --port $PORT &
+SERVER_PID=$!
 
-# Parse .env
-if grep -q "OPENROUTER_API_KEY=your-openrouter-api-key-here" .env; then
-    echo "⚠️  Please update OPENROUTER_API_KEY in .env"
+# Tarayıcıyı aç
+sleep 2
+
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "✅ Kurulum web arayüzü başlatıldı!"
+echo ""
+echo "🌐 Tarayıcını aç:"
+echo "   http://localhost:$PORT"
+echo ""
+echo "⏰ Otomatik açılmaya çalışılıyor..."
+echo ""
+
+# macOS'ta tarayıcı aç
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sleep 1
+    open "http://localhost:$PORT" 2>/dev/null || true
 fi
 
+echo "📋 Yapacakların:"
+echo "   1. OpenRouter API Key'i yapıştır (https://openrouter.ai/keys)"
+echo "   2. Diğer ayarları kontrol et"
+echo "   3. 'Kurulumu Başlat' butonuna tıkla"
+echo "   4. Docker servisleri otomatik başlayacak (2-3 dakika)"
 echo ""
-echo "🐳 Starting Docker containers..."
-docker compose up -d
 
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "⏳ Waiting for services to be healthy..."
+echo "⏹  Çıkmak için: Ctrl+C"
+echo ""
 
-# Wait for Immich
-echo -n "  Waiting for Immich..."
-for i in {1..30}; do
-    if docker exec immich-server curl -f http://localhost:3001/api/server/ping &> /dev/null; then
-        echo " ✅"
-        break
-    fi
-    echo -n "."
-    sleep 2
-done
-
-# Wait for barcode-service
-echo -n "  Waiting for barcode-service..."
-for i in {1..30}; do
-    if docker exec barcode-service curl -f http://localhost:5000/health &> /dev/null; then
-        echo " ✅"
-        break
-    fi
-    echo -n "."
-    sleep 2
-done
-
-# Wait for n8n
-echo -n "  Waiting for n8n..."
-for i in {1..30}; do
-    if docker exec n8n wget -q --spider http://localhost:5678/healthz &> /dev/null; then
-        echo " ✅"
-        break
-    fi
-    echo -n "."
-    sleep 2
-done
-
-echo ""
-echo "✅ All services are running!"
-echo ""
-echo "📋 Next Steps:"
-echo "  1. Open Immich: http://localhost:2283"
-echo "  2. Create admin account on first login"
-echo "  3. Go to Account Settings → API Keys → Create new key"
-echo "  4. Update IMMICH_API_KEY in .env"
-echo "  5. Restart n8n: docker compose restart n8n"
-echo "  6. Open n8n: http://localhost:5678"
-echo "  7. Import workflows from n8n-workflows/ folder"
-echo "  8. Enable and configure workflows"
-echo ""
-echo "📱 For mobile sync:"
-echo "  1. Install Immich app on iPhone/Android"
-echo "  2. Connect to: http://<your-ip>:2283"
-echo "  3. Enable WiFi-only backup in settings"
-echo ""
-echo "🔗 API Documentation:"
-echo "  Barcode Service: http://localhost:5001/docs"
-echo ""
-echo "📖 For detailed instructions, see README.md"
+# Server'ı çalıştır (foreground)
+wait $SERVER_PID
