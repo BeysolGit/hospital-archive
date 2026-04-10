@@ -57,7 +57,9 @@ class SetupHandler(SimpleHTTPRequestHandler):
         """
         .env dosyasını güncelle
         """
-        env_file = Path('/Users/beysol/Agents/hospital-archive/.env')
+        # Script'in dizinindeki .env dosyasını bul
+        script_dir = Path(__file__).parent
+        env_file = script_dir / '.env'
 
         # Mevcut .env'yi oku
         env_content = env_file.read_text() if env_file.exists() else ''
@@ -135,7 +137,9 @@ def main():
     parser.add_argument('--port', type=int, default=9000)
     args = parser.parse_args()
 
-    os.chdir('/Users/beysol/Agents/hospital-archive')
+    # Script'in çalıştığı klasöre git
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(script_dir)
 
     server_address = ('127.0.0.1', args.port)
     httpd = HTTPServer(server_address, SetupHandler)

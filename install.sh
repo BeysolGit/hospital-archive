@@ -47,10 +47,13 @@ echo ""
 
 echo "📋 2/5 - Klasörler oluşturuluyor..."
 
-mkdir -p photos/{immich,archive,unmatched,external}
-mkdir -p logs
+# Çalışılan klasörü bul (script nereye clone edildiyse orası)
+WORK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "✅ Klasörler hazır"
+mkdir -p "$WORK_DIR/photos/{immich,archive,unmatched,external}"
+mkdir -p "$WORK_DIR/logs"
+
+echo "✅ Klasörler hazır (Location: $WORK_DIR)"
 echo ""
 
 # ============================================================================
@@ -114,7 +117,7 @@ if lsof -Pi :$PORT -sTCP:LISTEN -t >/dev/null 2>&1; then
 fi
 
 # Python setup server'ı background'da başlat
-python3 /Users/beysol/Agents/hospital-archive/setup-server.py --port $PORT &
+python3 "$WORK_DIR/setup-server.py" --port $PORT &
 SETUP_PID=$!
 
 sleep 2

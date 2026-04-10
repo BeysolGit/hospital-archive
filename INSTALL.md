@@ -2,16 +2,15 @@
 
 ## ⚡ TEK KOMUT KURULUM
 
-### ADIM 1: Terminal'i Aç
+### ADIM 1: Repository'i İndir
 ```bash
-# macOS: Command + Space → "Terminal" yazıp Enter
-# Veya Spotlight'dan Terminal aç
+git clone https://github.com/BeysolGit/hospital-archive.git
+cd hospital-archive
 ```
 
-### ADIM 2: Doğru Klasöre Git
-```bash
-cd /Users/beysol/Agents/hospital-archive
-```
+### ADIM 2: Terminal'i Aç (Zaten açık)
+- macOS: Command + Space → "Terminal"
+- Linux/Windows: Terminal uygulaması
 
 ### ADIM 3: Kurulumu Başlat
 ```bash
@@ -24,9 +23,10 @@ bash install.sh
 
 Terminal'e sırasıyla yapıştır:
 
-### 1️⃣ Klasöre Git
+### 1️⃣ Repository'i İndir ve Klasöre Git
 ```bash
-cd /Users/beysol/Agents/hospital-archive
+git clone https://github.com/BeysolGit/hospital-archive.git
+cd hospital-archive
 ```
 
 ### 2️⃣ Kurulumu Başlat
@@ -140,10 +140,11 @@ bash test.sh
 # Doğru klasörde misin kontrol et
 pwd
 
-# Çıktı: /Users/beysol/Agents/hospital-archive olmalı
+# Çıktı: .../hospital-archive olmalı
 
-# Değilse:
-cd /Users/beysol/Agents/hospital-archive
+# Repository'i klone ettin mi?
+git clone https://github.com/BeysolGit/hospital-archive.git
+cd hospital-archive
 ```
 
 ### "Docker not found"
