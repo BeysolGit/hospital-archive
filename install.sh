@@ -65,22 +65,50 @@ if ! command -v docker &> /dev/null; then
     exit 1
 fi
 
-# Docker daemon kontrol
+# Docker daemon kontrol ve başlat
 if ! docker ps &> /dev/null 2>&1; then
     echo "⏳ Docker daemon başlatılıyor..."
 
     # macOS Docker Desktop'ı aç
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        open -a Docker 2>/dev/null || echo "Docker Desktop'ı manuel aç"
-        echo "   Lütfen Docker Desktop'ı aç ve tekrar dene"
-        exit 1
+        echo "   Opening Docker Desktop..."
+        open -a Docker 2>/dev/null
+
+        # Docker'ın başlaması için bekle
+        echo "   Waiting for Docker to start (up to 60 seconds)..."
+        for i in {1..60}; do
+            if docker ps &> /dev/null 2>&1; then
+                echo "   ✅ Docker is running"
+                break
+            fi
+            echo -n "."
+            sleep 1
+        done
+
+        # Hala çalışmazsa hata
+        if ! docker ps &> /dev/null 2>&1; then
+            echo ""
+            echo "❌ Docker still not running after 60 seconds"
+            echo "   Please try:"
+            echo "   1. Open Applications → Docker"
+            echo "   2. Wait for it to start"
+            echo "   3. Run: bash install.sh"
+            exit 1
+        fi
     fi
 
     # Linux için sudo check
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        echo "❌ Docker daemon çalışmıyor"
-        echo "   sudo systemctl start docker"
-        exit 1
+        echo "⏳ Starting Docker daemon (Linux)..."
+        sudo systemctl start docker 2>/dev/null || true
+
+        # Kontrol et
+        if ! docker ps &> /dev/null 2>&1; then
+            echo "❌ Docker daemon çalışmıyor"
+            echo "   Try: sudo systemctl start docker"
+            exit 1
+        fi
+        echo "✅ Docker started"
     fi
 fi
 
