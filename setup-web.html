@@ -25,9 +25,9 @@
             background: white;
             border-radius: 16px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 600px;
+            max-width: 700px;
             width: 100%;
-            padding: 40px;
+            padding: 50px;
         }
 
         .header {
@@ -36,7 +36,7 @@
         }
 
         .header h1 {
-            font-size: 32px;
+            font-size: 36px;
             margin-bottom: 10px;
             color: #333;
         }
@@ -44,10 +44,42 @@
         .header p {
             color: #666;
             font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .progress {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .form-section {
+            margin-bottom: 35px;
+        }
+
+        .form-section h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .form-group {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
@@ -55,12 +87,12 @@
             font-weight: 600;
             margin-bottom: 8px;
             color: #333;
-            font-size: 16px;
+            font-size: 15px;
         }
 
         .form-group .help-text {
             font-size: 13px;
-            color: #666;
+            color: #999;
             margin-top: 4px;
         }
 
@@ -69,8 +101,8 @@
             padding: 12px 16px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
+            font-size: 15px;
+            transition: all 0.3s;
             font-family: 'Courier New', monospace;
         }
 
@@ -78,56 +110,43 @@
             outline: none;
             border-color: #667eea;
             background: #f8f9ff;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .form-group input::placeholder {
-            color: #999;
+            color: #bbb;
         }
 
-        .section-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #333;
-            margin-top: 30px;
-            margin-bottom: 20px;
-            padding-top: 20px;
-            border-top: 2px solid #f0f0f0;
-        }
-
-        .section-title:first-of-type {
-            border-top: none;
-            padding-top: 0;
-            margin-top: 0;
-        }
-
-        .link-button {
+        .helper-link {
             display: inline-flex;
             align-items: center;
-            padding: 8px 12px;
-            background: #f0f0f0;
-            border: none;
+            gap: 6px;
+            padding: 10px 12px;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
             border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            color: #667eea;
             text-decoration: none;
-            transition: background 0.2s;
-            margin-top: 4px;
+            color: #667eea;
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 8px;
+            transition: all 0.2s;
         }
 
-        .link-button:hover {
-            background: #e8e8e8;
+        .helper-link:hover {
+            background: #efefef;
+            border-color: #667eea;
         }
 
         .button-group {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-top: 40px;
         }
 
         .btn {
             flex: 1;
-            padding: 14px 20px;
+            padding: 16px 24px;
             border: none;
             border-radius: 8px;
             font-size: 16px;
@@ -143,35 +162,13 @@
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
 
-        .btn-secondary {
-            background: #f0f0f0;
-            color: #333;
-        }
-
-        .btn-secondary:hover {
-            background: #e0e0e0;
-        }
-
-        .success {
-            display: none;
-            background: #f0fdf4;
-            border: 2px solid #22c55e;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 30px;
-            text-align: center;
-        }
-
-        .success h2 {
-            color: #22c55e;
-            margin-bottom: 10px;
-        }
-
-        .success p {
-            color: #666;
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .error {
@@ -179,42 +176,116 @@
             background: #fef2f2;
             border: 2px solid #ef4444;
             border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
+            padding: 16px;
+            margin-bottom: 25px;
+            color: #991b1b;
+            font-size: 14px;
+        }
+
+        .success {
+            display: none;
+            background: #f0fdf4;
+            border: 2px solid #22c55e;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .success h2 {
+            color: #22c55e;
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+
+        .success p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .success .next-steps {
+            margin-top: 25px;
+            text-align: left;
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .success .next-steps h3 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .success .next-steps ol {
+            margin-left: 20px;
+        }
+
+        .success .next-steps li {
+            margin-bottom: 8px;
+        }
+
+        .success .next-steps a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .success .next-steps a:hover {
+            text-decoration: underline;
+        }
+
+        .required {
             color: #ef4444;
-        }
-
-        .step-indicator {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            gap: 10px;
-        }
-
-        .step {
-            flex: 1;
-            height: 4px;
-            background: #e0e0e0;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .step.active {
-            background: #667eea;
         }
 
         @media (max-width: 600px) {
             .container {
-                padding: 20px;
+                padding: 30px;
             }
 
             .header h1 {
-                font-size: 24px;
+                font-size: 28px;
             }
 
             .button-group {
-                flex-direction: column;
+                flex-direction: column-reverse;
             }
+
+            .btn {
+                padding: 14px 20px;
+            }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f0f0f0;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading p {
+            margin-top: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .icon {
+            font-size: 24px;
         }
     </style>
 </head>
@@ -222,192 +293,233 @@
     <div class="container">
         <div class="header">
             <h1>🏥 Hospital Archive</h1>
-            <p>Hastane Fotoğraf Arşivleme Sistemi - Kurulum</p>
+            <p>Hastane Fotoğraf Arşivleme Sistemi</p>
         </div>
 
-        <div class="step-indicator">
-            <div class="step active"></div>
-            <div class="step"></div>
-            <div class="step"></div>
+        <div class="progress">
+            <div class="progress-bar"></div>
         </div>
 
         <div id="error" class="error"></div>
 
-        <form id="setupForm">
-            <!-- OpenRouter Bölümü -->
-            <div class="section-title">🔑 API Key'leri</div>
+        <div id="setupForm">
+            <!-- API Keys Section -->
+            <div class="form-section">
+                <h2><span class="icon">🔑</span> API Anahtarları</h2>
 
-            <div class="form-group">
-                <label for="openrouterKey">OpenRouter API Key *</label>
-                <p class="help-text">Barkod metni parse etmek için gerekli (LLM)</p>
-                <a href="https://openrouter.ai/keys" target="_blank" class="link-button">🔗 https://openrouter.ai/keys</a>
-                <input
-                    type="password"
-                    id="openrouterKey"
-                    name="openrouterKey"
-                    placeholder="sk-or-..."
-                    required
-                >
+                <div class="form-group">
+                    <label for="openrouterKey">OpenRouter API Key <span class="required">*</span></label>
+                    <p class="help-text">Barkod metnini parse etmek için (LLM service)</p>
+                    <a href="https://openrouter.ai/keys" target="_blank" class="helper-link">
+                        🔗 openrouter.ai/keys → Create Key
+                    </a>
+                    <input
+                        type="password"
+                        id="openrouterKey"
+                        placeholder="sk-or-..."
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="immichApiKey">Immich API Key</label>
+                    <p class="help-text">n8n workflow'ları için (Kurulumdan sonra)</p>
+                    <input
+                        type="password"
+                        id="immichApiKey"
+                        placeholder="imch_... (daha sonra girebilirsin)"
+                    >
+                </div>
             </div>
 
-            <!-- Immich Bölümü -->
-            <div class="section-title">📸 Immich Ayarları</div>
+            <!-- Storage Section -->
+            <div class="form-section">
+                <h2><span class="icon">📁</span> Depolama Yolları</h2>
 
-            <div class="form-group">
-                <label for="immichApiKey">Immich API Key</label>
-                <p class="help-text">n8n workflow'ları için (Kurulumdan sonra alınır)</p>
-                <input
-                    type="password"
-                    id="immichApiKey"
-                    name="immichApiKey"
-                    placeholder="imch_... (Opsiyonel - daha sonra ayarlanabilir)"
-                >
+                <div class="form-group">
+                    <label for="uploadPath">Immich Yükleme Klasörü</label>
+                    <input
+                        type="text"
+                        id="uploadPath"
+                        value="/tmp/immich-uploads"
+                        placeholder="/tmp/immich-uploads"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="archivePath">Arşiv Klasörü</label>
+                    <input
+                        type="text"
+                        id="archivePath"
+                        value="/tmp/archive"
+                        placeholder="/tmp/archive"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="unmatchedPath">Eşleşmeyenler Klasörü</label>
+                    <input
+                        type="text"
+                        id="unmatchedPath"
+                        value="/tmp/unmatched"
+                        placeholder="/tmp/unmatched"
+                    >
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="immichUploadPath">Immich Yükleme Klasörü</label>
-                <input
-                    type="text"
-                    id="immichUploadPath"
-                    name="immichUploadPath"
-                    value="/tmp/immich-uploads"
-                    placeholder="/tmp/immich-uploads"
-                >
+            <!-- Settings Section -->
+            <div class="form-section">
+                <h2><span class="icon">⚙️</span> Ayarlar</h2>
+
+                <div class="form-group">
+                    <label for="n8nPassword">n8n Admin Şifre</label>
+                    <input
+                        type="password"
+                        id="n8nPassword"
+                        value="admin123"
+                        placeholder="admin123"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="matchWindow">Zaman Penceresi (dakika)</label>
+                    <p class="help-text">Barkod ve fotoğrafı eşleştirmek için ±X dakika</p>
+                    <input
+                        type="number"
+                        id="matchWindow"
+                        value="30"
+                        min="1"
+                        max="300"
+                    >
+                </div>
             </div>
 
-            <!-- Arşiv Bölümü -->
-            <div class="section-title">📁 Arşiv Ayarları</div>
-
-            <div class="form-group">
-                <label for="archivePath">Arşiv Klasörü</label>
-                <input
-                    type="text"
-                    id="archivePath"
-                    name="archivePath"
-                    value="/tmp/archive"
-                    placeholder="/tmp/archive"
-                >
-            </div>
-
-            <div class="form-group">
-                <label for="unmatchedPath">Eşleşmeyenler Klasörü</label>
-                <input
-                    type="text"
-                    id="unmatchedPath"
-                    name="unmatchedPath"
-                    value="/tmp/unmatched"
-                    placeholder="/tmp/unmatched"
-                >
-            </div>
-
-            <!-- n8n Bölümü -->
-            <div class="section-title">⚙️ n8n Ayarları</div>
-
-            <div class="form-group">
-                <label for="n8nPassword">n8n Admin Şifre</label>
-                <input
-                    type="password"
-                    id="n8nPassword"
-                    name="n8nPassword"
-                    value="admin123"
-                    placeholder="admin123"
-                >
-            </div>
-
-            <!-- Match Window -->
-            <div class="section-title">⏰ Eşleştirme Ayarları</div>
-
-            <div class="form-group">
-                <label for="matchWindow">Zaman Penceresi (dakika)</label>
-                <p class="help-text">Barkod ve hasta fotoğrafını eşleştirmek için ±X dakika</p>
-                <input
-                    type="number"
-                    id="matchWindow"
-                    name="matchWindow"
-                    value="30"
-                    min="1"
-                    max="300"
-                >
-            </div>
-
-            <!-- Butonlar -->
+            <!-- Buttons -->
             <div class="button-group">
-                <button type="submit" class="btn btn-primary">✅ Kurulumu Başlat</button>
-                <button type="reset" class="btn btn-secondary">↺ Sıfırla</button>
+                <button type="button" onclick="window.location.reload()" class="btn" style="background: #f0f0f0; color: #333;">
+                    ↺ Sıfırla
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    ✅ Kurulumu Tamamla
+                </button>
             </div>
-        </form>
+        </div>
 
-        <!-- Başarı Mesajı -->
+        <!-- Loading State -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Sistem kurulumu yapılıyor... Lütfen bekle</p>
+        </div>
+
+        <!-- Success State -->
         <div id="success" class="success">
             <h2>✅ Kurulum Tamamlandı!</h2>
-            <p>Sistem 2-3 dakika içinde başlatılıyor...</p>
-            <p style="margin-top: 15px; font-size: 14px;">
-                <strong>Web UI'lar:</strong><br>
-                📸 <a href="http://localhost:2283" style="color: #667eea;">Immich</a> |
-                ⚙️ <a href="http://localhost:5678" style="color: #667eea;">n8n</a> |
-                📚 <a href="http://localhost:5001/docs" style="color: #667eea;">API Docs</a>
-            </p>
-            <p style="margin-top: 15px; font-size: 13px; color: #999;">
-                Terminal'de: <code>bash test.sh</code>
-            </p>
+            <p style="font-size: 16px; margin-bottom: 25px;">Sisteminiz hazır ve çalışıyor!</p>
+
+            <div class="next-steps">
+                <h3>📋 Sıradaki Adımlar:</h3>
+                <ol>
+                    <li><strong>Immich'i aç:</strong> <a href="http://localhost:2283" target="_blank">http://localhost:2283</a></li>
+                    <li>Admin hesap oluştur (email + şifre)</li>
+                    <li>Settings → Account → API Keys</li>
+                    <li>"Create New Key" → Token'i kopyala</li>
+                    <li>Buraya dön ve API Key'i güncelle</li>
+                    <li>n8n: <a href="http://localhost:5678" target="_blank">http://localhost:5678</a></li>
+                    <li>Workflow'ları import et (n8n-workflows/01_poll_and_route.json)</li>
+                    <li>Mobil: Immich App indir ve server ekle</li>
+                </ol>
+            </div>
+
+            <div style="margin-top: 25px; padding: 15px; background: #f0f8ff; border-radius: 8px;">
+                <p><strong>💡 İpucu:</strong> Immich mobil uygulamasını indirdikten sonra, telefondan çektiğin fotoğraflar otomatik olarak yüklenir ve sisteme girer.</p>
+            </div>
         </div>
     </div>
 
     <script>
-        document.getElementById('setupForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        const form = document.getElementById('setupForm');
+        const errorDiv = document.getElementById('error');
+        const loadingDiv = document.getElementById('loading');
+        const successDiv = document.getElementById('success');
+        const progressBar = document.querySelector('.progress-bar');
 
-            const errorDiv = document.getElementById('error');
-            errorDiv.style.display = 'none';
-            errorDiv.textContent = '';
-
-            // Validation
+        // Form validation
+        function validateForm() {
             const openrouterKey = document.getElementById('openrouterKey').value.trim();
+
             if (!openrouterKey) {
-                errorDiv.textContent = '❌ OpenRouter API Key gerekli!';
-                errorDiv.style.display = 'block';
-                return;
+                showError('❌ OpenRouter API Key gerekli!');
+                return false;
             }
 
             if (!openrouterKey.startsWith('sk-or-')) {
-                errorDiv.textContent = '❌ OpenRouter API Key "sk-or-" ile başlamalı!';
-                errorDiv.style.display = 'block';
-                return;
+                showError('❌ OpenRouter API Key "sk-or-" ile başlamalı!');
+                return false;
             }
 
-            // Collect form data
-            const formData = new FormData(document.getElementById('setupForm'));
-            const data = Object.fromEntries(formData);
+            return true;
+        }
+
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            progressBar.style.width = '0%';
+        }
+
+        // Form submit
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!validateForm()) return;
+
+            // Hide form, show loading
+            form.style.display = 'none';
+            errorDiv.style.display = 'none';
+            loadingDiv.style.display = 'block';
+            progressBar.style.width = '50%';
+
+            // Collect data
+            const data = {
+                openrouterKey: document.getElementById('openrouterKey').value.trim(),
+                immichApiKey: document.getElementById('immichApiKey').value.trim(),
+                uploadPath: document.getElementById('uploadPath').value,
+                archivePath: document.getElementById('archivePath').value,
+                unmatchedPath: document.getElementById('unmatchedPath').value,
+                n8nPassword: document.getElementById('n8nPassword').value,
+                matchWindow: document.getElementById('matchWindow').value
+            };
 
             try {
-                // API'ye gönder
                 const response = await fetch('/api/setup', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
 
                 if (!response.ok) {
                     const error = await response.json();
-                    throw new Error(error.message || 'Kurulum başarısız oldu');
+                    throw new Error(error.message || 'Kurulum başarısız');
                 }
 
-                // Başarılı
-                document.getElementById('setupForm').style.display = 'none';
-                document.getElementById('success').style.display = 'block';
-
-                // 5 saniye sonra Immich'i aç
-                setTimeout(() => {
-                    window.location.href = 'http://localhost:2283';
-                }, 5000);
+                // Success
+                progressBar.style.width = '100%';
+                loadingDiv.style.display = 'none';
+                successDiv.style.display = 'block';
 
             } catch (error) {
-                errorDiv.textContent = '❌ Hata: ' + error.message;
-                errorDiv.style.display = 'block';
+                form.style.display = 'block';
+                loadingDiv.style.display = 'none';
+                showError('❌ Hata: ' + error.message);
             }
         });
+
+        // Progress animation
+        setInterval(() => {
+            const current = parseFloat(progressBar.style.width) || 0;
+            if (current < 40 && loadingDiv.style.display !== 'none') {
+                progressBar.style.width = (current + Math.random() * 3) + '%';
+            }
+        }, 500);
     </script>
 </body>
 </html>

@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 """
 🏥 Hospital Archive - Kurulum Web Sunucusu
-Basit web arayüzünden tüm ayarları yap ve kurulumu başlat
+Web arayüzünden tüm ayarları yap
 """
 
 import json
 import os
-import subprocess
 import sys
+import argparse
 from pathlib import Path
 from http.server import HTTPServer, SimpleHTTPRequestHandler
-import urllib.parse
 
 class SetupHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
@@ -27,7 +26,7 @@ class SetupHandler(SimpleHTTPRequestHandler):
 
         try:
             # Request body'yi oku
-            content_length = int(self.headers['Content-Length'])
+            content_length = int(self.headers.get('Content-Length', 0))
             body = self.rfile.read(content_length)
             data = json.loads(body.decode('utf-8'))
 
@@ -44,13 +43,10 @@ class SetupHandler(SimpleHTTPRequestHandler):
             # .env dosyasını güncelle
             self.update_env(data)
 
-            # Docker'ı başlat
-            self.start_docker()
-
             # Başarı yanıtı
             self.send_json_response({
                 'status': 'success',
-                'message': 'Kurulum başlatıldı, Docker servisleri başlanıyor...'
+                'message': 'Kurulum tamamlandı!'
             })
 
         except Exception as e:
@@ -70,18 +66,19 @@ class SetupHandler(SimpleHTTPRequestHandler):
         updates = {
             'OPENROUTER_API_KEY': data.get('openrouterKey', ''),
             'IMMICH_API_KEY': data.get('immichApiKey', ''),
-            'UPLOAD_LOCATION': data.get('immichUploadPath', '/tmp/immich-uploads'),
+            'UPLOAD_LOCATION': data.get('uploadPath', '/tmp/immich-uploads'),
             'ARCHIVE_PATH': data.get('archivePath', '/tmp/archive'),
             'UNMATCHED_PATH': data.get('unmatchedPath', '/tmp/unmatched'),
             'N8N_PASSWORD': data.get('n8nPassword', 'admin123'),
             'MATCH_WINDOW_MINUTES': str(data.get('matchWindow', '30')),
         }
 
+        lines = env_content.split('\n') if env_content else []
+
         # Satır satır güncelle
         for key, value in updates.items():
-            if value:  # Boş değerleri skip et
+            if value:
                 pattern = f'{key}='
-                lines = env_content.split('\n')
                 found = False
 
                 for i, line in enumerate(lines):
@@ -93,37 +90,11 @@ class SetupHandler(SimpleHTTPRequestHandler):
                 if not found:
                     lines.append(f'{key}={value}')
 
-                env_content = '\n'.join(lines)
+        env_content = '\n'.join(lines)
 
         # .env dosyasını yaz
         env_file.write_text(env_content)
         print(f'✅ .env dosyası güncellendi')
-
-    def start_docker(self):
-        """Docker servislerini başlat"""
-        os.chdir('/Users/beysol/Agents/hospital-archive')
-
-        print('🚀 Docker servisleri başlatılıyor...')
-
-        try:
-            # Eski servisleri durdur
-            subprocess.run(['docker', 'compose', 'down'],
-                         capture_output=True, timeout=30)
-
-            # Images'ı pull et
-            subprocess.run(['docker', 'compose', 'pull'],
-                         capture_output=True, timeout=120)
-
-            # Servisler başlat
-            subprocess.run(['docker', 'compose', 'up', '-d'],
-                         capture_output=True, timeout=60)
-
-            print('✅ Docker servisleri başlatıldı')
-
-        except subprocess.TimeoutExpired:
-            print('⚠️  Docker işlemi timeout (devam et)')
-        except Exception as e:
-            print(f'⚠️  Docker başlatma hatası: {e}')
 
     def send_json_response(self, data):
         """JSON yanıt gönder"""
@@ -154,28 +125,28 @@ class SetupHandler(SimpleHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.end_headers()
 
+    def log_message(self, format, *args):
+        """Minimal logging"""
+        pass
+
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--port', type=int, default=9000)
+    args = parser.parse_args()
+
     os.chdir('/Users/beysol/Agents/hospital-archive')
 
-    port = 9000
-    server_address = ('127.0.0.1', port)
+    server_address = ('127.0.0.1', args.port)
     httpd = HTTPServer(server_address, SetupHandler)
-
-    print('╔════════════════════════════════════════════════════════╗')
-    print('║   🏥 Hospital Archive - KURULUM WEB UI                ║')
-    print('╚════════════════════════════════════════════════════════╝')
-    print('')
-    print(f'🌐 Tarayıcını aç: http://localhost:{port}')
-    print('')
-    print('⏹  Durdurmak için: Ctrl+C')
-    print('')
 
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
-        print('\n✅ Kurulum sunucusu kapatıldı')
-        sys.exit(0)
+        pass
+    except Exception as e:
+        print(f'Hata: {e}', file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == '__main__':

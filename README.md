@@ -27,37 +27,40 @@ Hastane ortamında çekilen hasta fotoğraflarını otomatik olarak arşivlemek 
         └─→ Index timestamp in SQLite
 ```
 
-## ⚡ HIZLI KURULUM (5 DAKIKA)
+## ⚡ KURULUM - TEK KOMUT (3 DAKIKA)
 
-### Seçenek 1: ULTRA OTOMATIK (Tavsiye Edilen) ✨
+### 🚀 Otomatik Kurulum
 ```bash
 cd hospital-archive
-bash auto-setup.sh
+bash install.sh
 ```
 
-**Sadece 2 şey sor:**
-1. OpenRouter API Key (https://openrouter.ai/keys)
-2. Immich API Key (Web UI'dan)
+**Ne olacak:**
+1. ✅ Docker servisleri otomatik başlayacak (Immich, n8n, barcode-service)
+2. ✅ Web kurulum sayfası açılacak (http://localhost:9000)
+3. ✅ OpenRouter API Key'i yapıştır
+4. ✅ Kurulumu tamamla butonuna tıkla
+5. ✅ Immich açılacak
+6. ✅ Admin hesap yap → Settings → API Keys → Create New Key
+7. ✅ Token'i kopyala ve web sayfasında yapıştır
+8. ✅ ✅ **BİTTİ!** Sistem hazır!
 
-**Sistem otomatik:**
-- Docker servislerini başlatır
-- Immich'i açar (admin hesap oluştur)
-- n8n'i yapılandırır
-- Bitmiş!
+**Sonra:**
+- 📸 Immich: http://localhost:2283 (Fotoğraf yönetimi + mobil sync)
+- ⚙️ n8n: http://localhost:5678 (Workflow'lar)
+- 📚 API: http://localhost:5001/docs (Barcode API)
 
 ---
 
-### Seçenik 2: Adım Adım Kurulum (Denetimli)
+### Alternatifler
+
+#### Seçenek 2: Adım Adım (Kontrollü)
 ```bash
-cd hospital-archive
 bash quick-install.sh
 ```
-
 Detaylı rehber: [KURULUM.md](KURULUM.md)
 
----
-
-### Seçenek 3: Manuel Kurulum (İleri Kullanıcılar)
+#### Seçenek 3: Manuel (İleri Kullanıcılar)
 
 #### 1. Yapılandırma Hazırlığı
 
