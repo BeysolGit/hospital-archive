@@ -29,8 +29,16 @@ Hastane ortamında çekilen hasta fotoğraflarını otomatik olarak arşivlemek 
 
 ## ⚡ KURULUM - TEK KOMUT (3 DAKIKA)
 
+### ⚠️ Önce Kontrol Et
+**Gerekler:** [REQUIREMENTS.md](REQUIREMENTS.md)
+- Docker Desktop
+- Git
+- Python 3
+- Modern tarayıcı
+
 ### 🚀 Otomatik Kurulum
 ```bash
+git clone https://github.com/BeysolGit/hospital-archive.git
 cd hospital-archive
 bash install.sh
 ```
