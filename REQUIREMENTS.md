@@ -1,29 +1,44 @@
 # ✅ GEREKLER - Kurulumdan Önce Kontrol Et
 
-## 1️⃣ Docker Desktop
+## 1️⃣ Docker & Docker Compose
 
 ### macOS
-**Yükle:**
 ```bash
-brew install docker
+# Homebrew ile
+brew install docker docker-compose
+
+# Veya Docker Desktop (recommanded)
+# https://www.docker.com/products/docker-desktop
 ```
 
-Veya direkt indir:
-https://www.docker.com/products/docker-desktop
-
-**Kontrol et:**
+**Docker Desktop'ı aç:**
 ```bash
-docker --version
-docker ps
+open -a Docker
 ```
 
 ### Windows
-https://www.docker.com/products/docker-desktop
+1. **Docker Desktop indir:** https://www.docker.com/products/docker-desktop
+2. **Kur ve aç**
+3. **Restart et (önemli!)**
 
-### Linux
+### Linux (Ubuntu/Debian)
 ```bash
+# Docker
+sudo apt-get update
 sudo apt-get install docker.io
+
+# Docker Compose
 sudo apt-get install docker-compose
+
+# Kullanıcıyı docker grubuna ekle (sudo şifre gerekli olmayacak)
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+### Kontrol Et
+```bash
+docker --version
+docker ps
 ```
 
 ---
@@ -35,29 +50,37 @@ sudo apt-get install docker-compose
 brew install git
 ```
 
-### Windows/Linux
+### Windows
 https://git-scm.com/download
 
-**Kontrol et:**
+### Linux
+```bash
+sudo apt-get install git
+```
+
+### Kontrol Et
 ```bash
 git --version
 ```
 
 ---
 
-## 3️⃣ Python 3 (macOS/Linux için)
+## 3️⃣ Python 3
 
 ### macOS
 ```bash
 brew install python3
 ```
 
+### Windows
+https://www.python.org/downloads/
+
 ### Linux
 ```bash
-sudo apt-get install python3
+sudo apt-get install python3 python3-pip
 ```
 
-**Kontrol et:**
+### Kontrol Et
 ```bash
 python3 --version
 ```
@@ -66,24 +89,28 @@ python3 --version
 
 ## 4️⃣ Tarayıcı
 
-Herhangi bir modern tarayıcı (Chrome, Safari, Firefox, Edge)
+Herhangi bir modern tarayıcı:
+- Chrome / Chromium
+- Firefox
+- Safari (macOS)
+- Edge (Windows)
 
 ---
 
-## 📋 Kontrol Listesi
+## 📋 Hızlı Kontrol Listesi
 
 ```bash
-# Hepsini kontrol et
-docker --version    # Docker yüklü mü?
-git --version       # Git yüklü mü?
-python3 --version   # Python yüklü mü?
+docker --version      # ✅ Docker yüklü mü?
+docker ps             # ✅ Docker daemon çalışıyor mu?
+git --version         # ✅ Git yüklü mü?
+python3 --version     # ✅ Python yüklü mü?
 ```
 
-Hepsi çalışıyorsa **hazırsın!**
+Hepsinin çıktısı görülüyorsa **hazırsın!**
 
 ---
 
-## 🚀 Sonra Kuruluma Başla
+## 🚀 Kuruluma Başla
 
 ```bash
 git clone https://github.com/BeysolGit/hospital-archive.git
@@ -91,4 +118,37 @@ cd hospital-archive
 bash install.sh
 ```
 
-**Not:** Docker Desktop macOS'ta başlatıldığından emin ol (Applications → Docker)
+---
+
+## ⚠️ Yaygın Sorunlar
+
+### macOS: Docker daemon çalışmıyor
+```bash
+open -a Docker  # Docker Desktop'ı aç
+sleep 30        # Başlaması bekleniyor
+bash install.sh # Tekrar dene
+```
+
+### Linux: "Permission denied" hatası
+```bash
+sudo usermod -aG docker $USER
+newgrp docker
+docker ps  # Kontrol et
+```
+
+### Windows: "Docker daemon is not running"
+1. Docker Desktop'ı aç (sistem tepsisinden)
+2. Kuruluma devam et
+
+### Tüm Sistemler: "git not found"
+- GitHub Desktop indir: https://desktop.github.com/
+- Veya Git kur: https://git-scm.com/
+
+---
+
+## 💡 İpuçları
+
+- **macOS:** Docker Desktop kullanmanız tavsiye edilir (brew'dan daha kolay)
+- **Linux:** `sudo` olmadan Docker kullanmak için user grubunu güncelle
+- **Windows:** Kurulumdan sonra bilgisayarı restart et
+- **Tüm:** Port çakışmaları varsa `.env`'de değiştir

@@ -45,19 +45,43 @@ echo ""
 
 echo "📋 1/5 - Ön kontroller..."
 
+# Docker kontrol
 if ! command -v docker &> /dev/null; then
     echo "❌ Docker yüklü değil!"
     echo ""
     echo "Yükle:"
-    echo "  macOS: brew install docker"
-    echo "  Veya: https://www.docker.com/products/docker-desktop"
+
+    # Sistem türünü belirle
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "  macOS: brew install docker"
+        echo "  Veya: https://www.docker.com/products/docker-desktop"
+    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        echo "  Linux: sudo apt-get install docker.io docker-compose"
+        echo "  Veya: https://docs.docker.com/engine/install/"
+    else
+        echo "  Windows: https://www.docker.com/products/docker-desktop"
+    fi
+
     exit 1
 fi
 
-if ! docker ps &> /dev/null; then
-    echo "❌ Docker daemon çalışmıyor!"
-    echo "   Docker Desktop'ı başlat"
-    exit 1
+# Docker daemon kontrol
+if ! docker ps &> /dev/null 2>&1; then
+    echo "⏳ Docker daemon başlatılıyor..."
+
+    # macOS Docker Desktop'ı aç
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        open -a Docker 2>/dev/null || echo "Docker Desktop'ı manuel aç"
+        echo "   Lütfen Docker Desktop'ı aç ve tekrar dene"
+        exit 1
+    fi
+
+    # Linux için sudo check
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        echo "❌ Docker daemon çalışmıyor"
+        echo "   sudo systemctl start docker"
+        exit 1
+    fi
 fi
 
 echo "✅ Kontroller tamamlandı"
