@@ -11,10 +11,18 @@ bash <(curl -s https://raw.githubusercontent.com/BeysolGit/hospital-archive/main
 ## ADIM 2: Hospital Archive Kurulsun
 
 ```bash
+# Eski klasörü sil (varsa)
+rm -rf hospital-archive
+
+# Yeni repository'i indir
 git clone https://github.com/BeysolGit/hospital-archive.git
 cd hospital-archive
+
+# Kurulumu başlat
 bash install.sh
 ```
+
+**NOT:** Docker Desktop macOS'ta açık olmalı! Eğer kapalıysa kurulum otomatik açacak, biraz beklersen başlar.
 
 ## Hepsi bu!
 

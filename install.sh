@@ -66,50 +66,45 @@ if ! command -v docker &> /dev/null; then
 fi
 
 # Docker daemon kontrol ve başlat
-if ! docker ps &> /dev/null 2>&1; then
-    echo "⏳ Docker daemon başlatılıyor..."
+DOCKER_READY=0
+for attempt in {1..3}; do
+    if docker ps &> /dev/null 2>&1; then
+        DOCKER_READY=1
+        echo "✅ Docker daemon çalışıyor"
+        break
+    fi
 
-    # macOS Docker Desktop'ı aç
+    # Docker daemon çalışmıyorsa başlat
+    if [ $attempt -eq 1 ]; then
+        echo "⏳ Docker daemon başlatılıyor..."
+
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            # macOS - Docker Desktop'ı aç
+            open -a Docker 2>/dev/null || true
+            echo "   Waiting for Docker..."
+        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+            # Linux - systemctl ile başlat
+            sudo systemctl start docker 2>/dev/null || true
+            echo "   Starting Docker daemon..."
+        fi
+
+        # Başlaması için bekle
+        sleep 10
+    fi
+done
+
+# Hala çalışmazsa hata
+if [ $DOCKER_READY -eq 0 ]; then
+    echo "❌ Docker daemon çalışmıyor!"
+    echo ""
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        echo "   Opening Docker Desktop..."
-        open -a Docker 2>/dev/null
-
-        # Docker'ın başlaması için bekle
-        echo "   Waiting for Docker to start (up to 60 seconds)..."
-        for i in {1..60}; do
-            if docker ps &> /dev/null 2>&1; then
-                echo "   ✅ Docker is running"
-                break
-            fi
-            echo -n "."
-            sleep 1
-        done
-
-        # Hala çalışmazsa hata
-        if ! docker ps &> /dev/null 2>&1; then
-            echo ""
-            echo "❌ Docker still not running after 60 seconds"
-            echo "   Please try:"
-            echo "   1. Open Applications → Docker"
-            echo "   2. Wait for it to start"
-            echo "   3. Run: bash install.sh"
-            exit 1
-        fi
+        echo "   1. Applications → Docker açıl"
+        echo "   2. Başlaması bekleniyor (1-2 dakika)..."
+        echo "   3. bash install.sh tekrar çalıştır"
+    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        echo "   sudo systemctl start docker"
     fi
-
-    # Linux için sudo check
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        echo "⏳ Starting Docker daemon (Linux)..."
-        sudo systemctl start docker 2>/dev/null || true
-
-        # Kontrol et
-        if ! docker ps &> /dev/null 2>&1; then
-            echo "❌ Docker daemon çalışmıyor"
-            echo "   Try: sudo systemctl start docker"
-            exit 1
-        fi
-        echo "✅ Docker started"
-    fi
+    exit 1
 fi
 
 echo "✅ Kontroller tamamlandı"
