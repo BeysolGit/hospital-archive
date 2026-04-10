@@ -76,11 +76,11 @@ if [ "$OS" = "macos" ]; then
     fi
 
     echo ""
-    echo "⚠️  ÖNEMLI: Docker Desktop'ı aç!"
-    echo "   Applications → Docker"
-    echo "   Başlaması 30 saniye kadar sürebilir"
-    echo ""
-    read -p "   Docker Desktop'ı açtın mı? (Enter devam etmek için)"
+    echo "🚀 Docker Desktop otomatik açılıyor..."
+    open -a Docker 2>/dev/null || true
+
+    echo "   ⏳ Başlaması 30 saniye kadar sürebilir..."
+    sleep 30
 
 fi
 
