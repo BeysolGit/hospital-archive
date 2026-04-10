@@ -27,9 +27,39 @@ Hastane ortamında çekilen hasta fotoğraflarını otomatik olarak arşivlemek 
         └─→ Index timestamp in SQLite
 ```
 
-## Kurulum
+## ⚡ HIZLI KURULUM (5 DAKIKA)
 
-### 1. Yapılandırma Hazırlığı
+### Seçenek 1: ULTRA OTOMATIK (Tavsiye Edilen) ✨
+```bash
+cd hospital-archive
+bash auto-setup.sh
+```
+
+**Sadece 2 şey sor:**
+1. OpenRouter API Key (https://openrouter.ai/keys)
+2. Immich API Key (Web UI'dan)
+
+**Sistem otomatik:**
+- Docker servislerini başlatır
+- Immich'i açar (admin hesap oluştur)
+- n8n'i yapılandırır
+- Bitmiş!
+
+---
+
+### Seçenik 2: Adım Adım Kurulum (Denetimli)
+```bash
+cd hospital-archive
+bash quick-install.sh
+```
+
+Detaylı rehber: [KURULUM.md](KURULUM.md)
+
+---
+
+### Seçenek 3: Manuel Kurulum (İleri Kullanıcılar)
+
+#### 1. Yapılandırma Hazırlığı
 
 ```bash
 # Proje klasörüne gir
@@ -41,10 +71,12 @@ nano .env
 
 Kritik değişkenler:
 
-- `UPLOAD_LOCATION`: Immich yükleme klasörü (örn: `/Users/beysol/hospital-photos/immich`)
-- `ARCHIVE_PATH`: Arşiv hedefi (örn: `/Users/beysol/hospital-photos/archive`)
-- `OPENROUTER_API_KEY`: OpenRouter API anahtarı (openrouter.ai'dan al)
-- `N8N_PASSWORD`: n8n admin şifresi
+- `OPENROUTER_API_KEY`: OpenRouter API anahtarı (https://openrouter.ai/keys)
+- `IMMICH_API_KEY`: Immich API Key (kurulum sonrası web UI'dan)
+- `UPLOAD_LOCATION`: Immich yükleme klasörü (örn: `/tmp/immich-uploads`)
+- `ARCHIVE_PATH`: Arşiv hedefi (örn: `/tmp/archive`)
+
+#### 2. Klasörleri Oluştur ve Servisleri Başlat
 
 ```bash
 # Klasör izinlerini ayarla
