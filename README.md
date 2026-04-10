@@ -27,16 +27,19 @@ Hastane ortamında çekilen hasta fotoğraflarını otomatik olarak arşivlemek 
         └─→ Index timestamp in SQLite
 ```
 
-## ⚡ KURULUM - TEK KOMUT (3 DAKIKA)
+## ⚡ KURULUM - 2 KOMUT (Tamamen Otomatik)
 
-### ⚠️ Önce Kontrol Et
-**Gerekler:** [REQUIREMENTS.md](REQUIREMENTS.md)
-- Docker Desktop
-- Git
-- Python 3
-- Modern tarayıcı
+### 1️⃣ Gereklilikler Kurulsun (İlk Defa)
+```bash
+bash <(curl -s https://raw.githubusercontent.com/BeysolGit/hospital-archive/main/setup-dependencies.sh)
+```
 
-### 🚀 Otomatik Kurulum
+Otomatik olarak kurur:
+- ✅ Docker
+- ✅ Git
+- ✅ Python 3
+
+### 2️⃣ Hospital Archive Kurulsun
 ```bash
 git clone https://github.com/BeysolGit/hospital-archive.git
 cd hospital-archive

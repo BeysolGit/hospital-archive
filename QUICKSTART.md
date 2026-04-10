@@ -1,8 +1,14 @@
-# 🚀 QUICK START - 3 KOMUTta KURULUM
+# 🚀 QUICK START - 2 KOMUT (Tamamen Otomatik)
 
-## Yapacakların:
+## ADIM 1: Gereklilikler Kurulsun (İlk Defa)
 
-Terminal'e bu 3 komutu sırasıyla yapıştır:
+Bunu sadece **ilk defa** çalıştır. Docker, Git, Python3 otomatik kurulacak:
+
+```bash
+bash <(curl -s https://raw.githubusercontent.com/BeysolGit/hospital-archive/main/setup-dependencies.sh)
+```
+
+## ADIM 2: Hospital Archive Kurulsun
 
 ```bash
 git clone https://github.com/BeysolGit/hospital-archive.git
