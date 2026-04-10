@@ -4,7 +4,8 @@
 
 ### Seçenek 1: ULTRA OTOMATIK (Tavsiye Edilen)
 ```bash
-cd /Users/beysol/Agents/hospital-archive
+git clone https://github.com/BeysolGit/hospital-archive.git
+cd hospital-archive
 bash auto-setup.sh
 ```
 
@@ -20,7 +21,8 @@ bash auto-setup.sh
 
 ### Seçenek 2: STEP-BY-STEP (Denetimli)
 ```bash
-cd /Users/beysol/Agents/hospital-archive
+git clone https://github.com/BeysolGit/hospital-archive.git
+cd hospital-archive
 bash quick-install.sh
 ```
 
@@ -37,7 +39,8 @@ bash quick-install.sh
 ### Seçenek 3: MANUEL (Detaylı Kontrol)
 
 ```bash
-cd /Users/beysol/Agents/hospital-archive
+git clone https://github.com/BeysolGit/hospital-archive.git
+cd hospital-archive
 
 # 1. .env dosyasını düzenle
 vim .env
