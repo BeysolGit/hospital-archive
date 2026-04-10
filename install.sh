@@ -18,6 +18,28 @@ echo "╚═══════════════════════�
 echo ""
 
 # ============================================================================
+# ADIM 0: .ENV DOSYASINI HAZIRLA
+# ============================================================================
+
+# Çalışılan klasörü bul
+WORK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# .env yoksa template'ten kopyala
+if [ ! -f "$WORK_DIR/.env" ]; then
+    if [ -f "$WORK_DIR/.env.example" ]; then
+        cp "$WORK_DIR/.env.example" "$WORK_DIR/.env"
+        echo "📋 0/5 - .env dosyası template'ten oluşturuldu"
+    else
+        echo "❌ .env.example bulunamadı!"
+        exit 1
+    fi
+else
+    echo "📋 0/5 - .env dosyası zaten var"
+fi
+
+echo ""
+
+# ============================================================================
 # ADIM 1: ÖN KONTROLLER
 # ============================================================================
 
@@ -46,9 +68,6 @@ echo ""
 # ============================================================================
 
 echo "📋 2/5 - Klasörler oluşturuluyor..."
-
-# Çalışılan klasörü bul (script nereye clone edildiyse orası)
-WORK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 mkdir -p "$WORK_DIR/photos/{immich,archive,unmatched,external}"
 mkdir -p "$WORK_DIR/logs"
