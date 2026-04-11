@@ -172,9 +172,8 @@ WAIT_TIME=0
 MAX_WAIT=180
 
 while [ $WAIT_TIME -lt $MAX_WAIT ]; do
-    if docker compose exec -T immich-server curl -sf http://localhost:3001/api/server/ping &>/dev/null && \
-       docker compose exec -T barcode-service curl -sf http://localhost:5000/health &>/dev/null && \
-       docker compose exec -T n8n curl -sf http://localhost:5678/healthz &>/dev/null; then
+    if docker compose exec -T immich-server curl -sf http://localhost:2283/api/server/ping &>/dev/null && \
+       docker compose exec -T n8n wget -q --spider http://localhost:5678/healthz &>/dev/null; then
         echo "   ✅ Tüm servisler hazır!"
         break
     fi

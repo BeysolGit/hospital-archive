@@ -68,9 +68,8 @@ class SetupHandler(SimpleHTTPRequestHandler):
         updates = {
             'OPENROUTER_API_KEY': data.get('openrouterKey', ''),
             'IMMICH_API_KEY': data.get('immichApiKey', ''),
-            'UPLOAD_LOCATION': data.get('uploadPath', '/tmp/immich-uploads'),
-            'ARCHIVE_PATH': data.get('archivePath', '/tmp/archive'),
-            'UNMATCHED_PATH': data.get('unmatchedPath', '/tmp/unmatched'),
+            'ARCHIVE_PATH': data.get('archivePath', './photos/archive'),
+            'UNMATCHED_PATH': data.get('unmatchedPath', './photos/unmatched'),
             'N8N_PASSWORD': data.get('n8nPassword', 'admin123'),
             'MATCH_WINDOW_MINUTES': str(data.get('matchWindow', '30')),
         }

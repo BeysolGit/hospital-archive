@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Immich PostgreSQL Database (with pgvector support)
   immich-db:
@@ -30,9 +28,9 @@ services:
       retries: 5
     restart: unless-stopped
 
-  # Immich Server (API + Web UI)
+  # Immich Server (API + Web UI + Microservices)
   immich-server:
-    image: ghcr.io/immich-app/immich-server:latest
+    image: ghcr.io/immich-app/immich-server:release
     container_name: immich-server
     depends_on:
       immich-db:
@@ -43,49 +41,24 @@ services:
       DB_HOSTNAME: immich-db
       DB_USERNAME: ${DB_USER:-postgres}
       DB_PASSWORD: ${DB_PASSWORD:-postgres}
-      DB_NAME: ${DB_NAME:-immich}
+      DB_DATABASE_NAME: ${DB_NAME:-immich}
       REDIS_HOSTNAME: immich-redis
-      UPLOAD_LOCATION: ${UPLOAD_LOCATION:-/usr/src/app/upload}
-      IMMICH_PORT: 3001
-      IMMICH_MEDIA_LOCATION: ${UPLOAD_LOCATION:-/usr/src/app/upload}
+      IMMICH_MEDIA_LOCATION: /usr/src/app/upload
       TZ: Europe/Istanbul
     volumes:
-      - ${UPLOAD_LOCATION:-/tmp/immich}:${UPLOAD_LOCATION:-/usr/src/app/upload}
-      - ${EXTERNAL_LIBRARY_PATH:-/tmp/external}:/external-library:ro
+      - immich_uploads:/usr/src/app/upload
+      - ${EXTERNAL_LIBRARY_PATH:-./photos/external}:/external-library:ro
     ports:
-      - "2283:3001"
+      - "2283:2283"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/api/server/ping"]
+      test: ["CMD", "curl", "-f", "http://localhost:2283/api/server/ping"]
       interval: 10s
       timeout: 5s
-      retries: 5
-    restart: unless-stopped
-
-  # Immich Microservices (thumbnails, metadata extraction)
-  immich-microservices:
-    image: ghcr.io/immich-app/immich-server:latest
-    container_name: immich-microservices
-    command: start.sh microservices
-    depends_on:
-      immich-db:
-        condition: service_healthy
-      immich-redis:
-        condition: service_healthy
-    environment:
-      DB_HOSTNAME: immich-db
-      DB_USERNAME: ${DB_USER:-postgres}
-      DB_PASSWORD: ${DB_PASSWORD:-postgres}
-      DB_NAME: ${DB_NAME:-immich}
-      REDIS_HOSTNAME: immich-redis
-      UPLOAD_LOCATION: ${UPLOAD_LOCATION:-/usr/src/app/upload}
-      IMMICH_MEDIA_LOCATION: ${UPLOAD_LOCATION:-/usr/src/app/upload}
-      TZ: Europe/Istanbul
-    volumes:
-      - ${UPLOAD_LOCATION:-/tmp/immich}:${UPLOAD_LOCATION:-/usr/src/app/upload}
-      - ${EXTERNAL_LIBRARY_PATH:-/tmp/external}:/external-library:ro
+      retries: 10
+      start_period: 30s
     restart: unless-stopped
     # Machine Learning service intentionally EXCLUDED to save RAM
-    # Facial recognition and CLIP search not needed for hospital barcode archiving
+    # Facial recognition and CLIP search not needed for barcode archiving
 
   # n8n Workflow Orchestration
   n8n:
@@ -106,9 +79,9 @@ services:
       GENERIC_TIMEZONE: Europe/Istanbul
     volumes:
       - n8n_data:/home/node/.n8n
-      - ${ARCHIVE_PATH:-/tmp/archive}:/archive
-      - ${UNMATCHED_PATH:-/tmp/unmatched}:/unmatched
-      - ${EXTERNAL_LIBRARY_PATH:-/tmp/external}:/external:ro
+      - ${ARCHIVE_PATH:-./photos/archive}:/archive
+      - ${UNMATCHED_PATH:-./photos/unmatched}:/unmatched
+      - ${EXTERNAL_LIBRARY_PATH:-./photos/external}:/external:ro
     ports:
       - "5678:5678"
     healthcheck:
@@ -116,6 +89,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 15s
     restart: unless-stopped
 
   # Barcode Processing Service (FastAPI + zxing + EasyOCR)
@@ -128,16 +102,16 @@ services:
       immich-server:
         condition: service_healthy
     environment:
-      ARCHIVE_PATH: ${ARCHIVE_PATH:-/archive}
-      UNMATCHED_PATH: ${UNMATCHED_PATH:-/unmatched}
+      ARCHIVE_PATH: /archive
+      UNMATCHED_PATH: /unmatched
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
       OPENROUTER_MODEL: ${OPENROUTER_MODEL:-meta-llama/llama-3.1-8b-instruct}
       MATCH_WINDOW_MINUTES: ${MATCH_WINDOW_MINUTES:-30}
       TZ: Europe/Istanbul
     volumes:
-      - ${ARCHIVE_PATH:-/tmp/archive}:/archive
-      - ${UNMATCHED_PATH:-/tmp/unmatched}:/unmatched
-      - ${UPLOAD_LOCATION:-/tmp/immich}:${UPLOAD_LOCATION:-/usr/src/app/upload}:ro
+      - ${ARCHIVE_PATH:-./photos/archive}:/archive
+      - ${UNMATCHED_PATH:-./photos/unmatched}:/unmatched
+      - immich_uploads:/immich-data:ro
       - barcode_db:/app/data
     ports:
       - "5001:5000"
@@ -146,10 +120,13 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 20s
     restart: unless-stopped
 
 volumes:
   immich_db:
+    driver: local
+  immich_uploads:
     driver: local
   n8n_data:
     driver: local

@@ -337,32 +337,24 @@
                 <h2><span class="icon">📁</span> Depolama Yolları</h2>
 
                 <div class="form-group">
-                    <label for="uploadPath">Immich Yükleme Klasörü</label>
-                    <input
-                        type="text"
-                        id="uploadPath"
-                        value="/tmp/immich-uploads"
-                        placeholder="/tmp/immich-uploads"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="archivePath">Arşiv Klasörü</label>
+                    <label for="archivePath">Arsiv Klasoru</label>
+                    <p class="help-text">Eslesen fotograflarin kaydedilecegi yer</p>
                     <input
                         type="text"
                         id="archivePath"
-                        value="/tmp/archive"
-                        placeholder="/tmp/archive"
+                        value="./photos/archive"
+                        placeholder="./photos/archive"
                     >
                 </div>
 
                 <div class="form-group">
-                    <label for="unmatchedPath">Eşleşmeyenler Klasörü</label>
+                    <label for="unmatchedPath">Eslesmeyenler Klasoru</label>
+                    <p class="help-text">1 saat icerisinde eslesmeyen fotograflar</p>
                     <input
                         type="text"
                         id="unmatchedPath"
-                        value="/tmp/unmatched"
-                        placeholder="/tmp/unmatched"
+                        value="./photos/unmatched"
+                        placeholder="./photos/unmatched"
                     >
                 </div>
             </div>
@@ -480,7 +472,6 @@
             const data = {
                 openrouterKey: document.getElementById('openrouterKey').value.trim(),
                 immichApiKey: document.getElementById('immichApiKey').value.trim(),
-                uploadPath: document.getElementById('uploadPath').value,
                 archivePath: document.getElementById('archivePath').value,
                 unmatchedPath: document.getElementById('unmatchedPath').value,
                 n8nPassword: document.getElementById('n8nPassword').value,
