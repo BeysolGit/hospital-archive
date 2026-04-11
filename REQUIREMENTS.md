@@ -4,12 +4,10 @@
 
 ### macOS
 ```bash
-# Homebrew ile
-brew install docker docker-compose
-
-# Veya Docker Desktop (recommanded)
-# https://www.docker.com/products/docker-desktop
+# Docker Desktop kur (daemon + CLI birlikte gelir)
+brew install --cask docker
 ```
+> ⚠️ `brew install docker` sadece CLI kurar, daemon kurmaz! `--cask` şart.
 
 **Docker Desktop'ı aç:**
 ```bash

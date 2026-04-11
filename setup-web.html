@@ -302,7 +302,7 @@
 
         <div id="error" class="error"></div>
 
-        <div id="setupForm">
+        <form id="setupForm" onsubmit="return false;">
             <!-- API Keys Section -->
             <div class="form-section">
                 <h2><span class="icon">🔑</span> API Anahtarları</h2>
@@ -399,11 +399,11 @@
                 <button type="button" onclick="window.location.reload()" class="btn" style="background: #f0f0f0; color: #333;">
                     ↺ Sıfırla
                 </button>
-                <button type="submit" class="btn btn-primary">
+                <button type="button" class="btn btn-primary" onclick="submitSetup()">
                     ✅ Kurulumu Tamamla
                 </button>
             </div>
-        </div>
+        </form>
 
         <!-- Loading State -->
         <div id="loading" class="loading">
@@ -467,9 +467,7 @@
         }
 
         // Form submit
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
+        async function submitSetup() {
             if (!validateForm()) return;
 
             // Hide form, show loading
@@ -498,7 +496,7 @@
 
                 if (!response.ok) {
                     const error = await response.json();
-                    throw new Error(error.message || 'Kurulum başarısız');
+                    throw new Error(error.error || 'Kurulum basarisiz');
                 }
 
                 // Success
@@ -509,9 +507,9 @@
             } catch (error) {
                 form.style.display = 'block';
                 loadingDiv.style.display = 'none';
-                showError('❌ Hata: ' + error.message);
+                showError('Hata: ' + error.message);
             }
-        });
+        }
 
         // Progress animation
         setInterval(() => {

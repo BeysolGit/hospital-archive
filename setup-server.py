@@ -101,7 +101,7 @@ class SetupHandler(SimpleHTTPRequestHandler):
     def send_json_response(self, data):
         """JSON yanıt gönder"""
         self.send_response(200)
-        self.send_header('Content-type', 'application/json')
+        self.send_header('Content-Type', 'application/json')
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
         self.wfile.write(json.dumps(data).encode('utf-8'))
@@ -109,18 +109,13 @@ class SetupHandler(SimpleHTTPRequestHandler):
     def send_json_error(self, message, status_code=400):
         """JSON hata gönder"""
         self.send_response(status_code)
-        self.send_header('Content-type', 'application/json')
+        self.send_header('Content-Type', 'application/json')
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
         self.wfile.write(json.dumps({'error': message}).encode('utf-8'))
 
-    def end_headers(self):
-        """CORS headers ekle"""
-        self.send_header('Access-Control-Allow-Origin', '*')
-        super().end_headers()
-
     def do_OPTIONS(self):
-        """OPTIONS request'ini işle (CORS)"""
+        """CORS preflight"""
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
@@ -128,8 +123,9 @@ class SetupHandler(SimpleHTTPRequestHandler):
         self.end_headers()
 
     def log_message(self, format, *args):
-        """Minimal logging"""
-        pass
+        """Log sadece hataları"""
+        if args and '404' in str(args[0]):
+            super().log_message(format, *args)
 
 
 def main():

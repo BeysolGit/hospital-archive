@@ -48,13 +48,17 @@ if [ "$OS" = "macos" ]; then
 
     echo ""
 
-    # Docker
-    if ! command -v docker &> /dev/null; then
-        echo "📦 Docker kurulması gerekiyor..."
-        brew install docker
-        echo "✅ Docker kuruldu"
+    # Docker Desktop (daemon + CLI birlikte)
+    if ! docker ps &> /dev/null 2>&1; then
+        if ! ls /Applications/Docker.app &>/dev/null 2>&1; then
+            echo "📦 Docker Desktop kurulması gerekiyor..."
+            brew install --cask docker
+            echo "✅ Docker Desktop kuruldu"
+        else
+            echo "✅ Docker Desktop zaten kurulu"
+        fi
     else
-        echo "✅ Docker zaten yüklü"
+        echo "✅ Docker zaten çalışıyor"
     fi
 
     # Git
@@ -77,10 +81,24 @@ if [ "$OS" = "macos" ]; then
 
     echo ""
     echo "🚀 Docker Desktop otomatik açılıyor..."
-    open -a Docker 2>/dev/null || true
+    if [ -d "/Applications/Docker.app" ]; then
+        open /Applications/Docker.app 2>/dev/null || true
+    else
+        open -a Docker 2>/dev/null || true
+    fi
 
-    echo "   ⏳ Başlaması 30 saniye kadar sürebilir..."
-    sleep 30
+    echo "   ⏳ Docker daemon başlaması bekleniyor (60 saniyeye kadar)..."
+    WAIT=0
+    while [ $WAIT -lt 60 ]; do
+        if docker ps &> /dev/null 2>&1; then
+            echo "   ✅ Docker daemon hazır!"
+            break
+        fi
+        echo -n "."
+        sleep 3
+        WAIT=$((WAIT + 3))
+    done
+    echo ""
 
 fi
 
@@ -94,27 +112,38 @@ if [ "$OS" = "linux" ]; then
     echo ""
 
     echo "📥 Paket listesi güncelleniyor..."
-    sudo apt-get update
+    sudo apt-get update -qq
 
-    # Docker
+    # Docker Engine + Docker Compose Plugin (v2)
     if ! command -v docker &> /dev/null; then
         echo "📦 Docker kurulması gerekiyor..."
-        sudo apt-get install -y docker.io
-        sudo systemctl start docker
-        sudo usermod -aG docker $USER
-        newgrp docker
-        echo "✅ Docker kuruldu"
+        # Docker'ın resmi GPG anahtarı ve repository'si
+        sudo apt-get install -y ca-certificates curl gnupg
+        sudo install -m 0755 -d /etc/apt/keyrings
+        if [ ! -f /etc/apt/keyrings/docker.gpg ]; then
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+            sudo chmod a+r /etc/apt/keyrings/docker.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            sudo apt-get update -qq
+        fi
+        sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+        echo "✅ Docker + Compose Plugin kuruldu"
     else
         echo "✅ Docker zaten yüklü"
+        # Compose plugin yoksa kur
+        if ! docker compose version &> /dev/null; then
+            echo "📦 Docker Compose Plugin kurulması gerekiyor..."
+            sudo apt-get install -y docker-compose-plugin 2>/dev/null || true
+        fi
     fi
 
-    # Docker Compose
-    if ! command -v docker-compose &> /dev/null; then
-        echo "📦 Docker Compose kurulması gerekiyor..."
-        sudo apt-get install -y docker-compose
-        echo "✅ Docker Compose kuruldu"
-    else
-        echo "✅ Docker Compose zaten yüklü"
+    # Docker daemon başlat ve kullanıcıyı gruba ekle
+    sudo systemctl start docker 2>/dev/null || true
+    sudo systemctl enable docker 2>/dev/null || true
+    if ! groups | grep -q docker; then
+        sudo usermod -aG docker $USER
+        echo "⚠️  Docker grubuna eklendi. Değişikliğin geçerli olması için:"
+        echo "   Terminali kapat ve yeniden aç, sonra tekrar çalıştır."
     fi
 
     # Git
@@ -149,24 +178,43 @@ if [ "$OS" = "windows" ]; then
     echo "──────────────────"
     echo ""
 
-    echo "⚠️  Windows'ta manuel kurulum gerekli:"
-    echo ""
-    echo "1️⃣  Docker Desktop indir:"
-    echo "   https://www.docker.com/products/docker-desktop"
-    echo "   İndir → Kur → Restart bilgisayarı"
-    echo ""
-    echo "2️⃣  Git indir:"
-    echo "   https://git-scm.com/download/win"
-    echo "   İndir → Kur"
-    echo ""
-    echo "3️⃣  Python indir:"
-    echo "   https://www.python.org/downloads/"
-    echo "   İndir → Kur (✅ Add Python to PATH seçini!)"
-    echo ""
-    echo "4️⃣  Tamamlayınca devam et:"
-    echo "   bash install.sh"
-    echo ""
-    read -p "   Kurulumları yaptın mı? (Enter devam etmek için)"
+    # winget varsa otomatik kur
+    if command -v winget &> /dev/null; then
+        echo "📥 winget ile otomatik kurulum..."
+
+        if ! command -v docker &> /dev/null; then
+            echo "📦 Docker Desktop kuruluyor..."
+            winget install -e --id Docker.DockerDesktop --accept-source-agreements --accept-package-agreements 2>/dev/null || true
+        else
+            echo "✅ Docker zaten yüklü"
+        fi
+
+        if ! command -v git &> /dev/null; then
+            echo "📦 Git kuruluyor..."
+            winget install -e --id Git.Git --accept-source-agreements --accept-package-agreements 2>/dev/null || true
+        else
+            echo "✅ Git zaten yüklü"
+        fi
+
+        if ! command -v python3 &> /dev/null && ! command -v python &> /dev/null; then
+            echo "📦 Python kuruluyor..."
+            winget install -e --id Python.Python.3.11 --accept-source-agreements --accept-package-agreements 2>/dev/null || true
+        else
+            echo "✅ Python zaten yüklü"
+        fi
+
+        echo ""
+        echo "⚠️  Kurulum sonrası terminali kapat ve yeniden aç!"
+    else
+        echo "⚠️  winget bulunamadı. Manuel kurulum gerekli:"
+        echo ""
+        echo "1. Docker Desktop: https://www.docker.com/products/docker-desktop"
+        echo "2. Git: https://git-scm.com/download/win"
+        echo "3. Python: https://www.python.org/downloads/"
+        echo "   (Add Python to PATH secenegini tikla!)"
+        echo ""
+        echo "Kurduktan sonra tekrar calistir: bash install.sh"
+    fi
 
 fi
 

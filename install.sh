@@ -51,13 +51,11 @@ if ! command -v docker &> /dev/null; then
     echo ""
     echo "Yükle:"
 
-    # Sistem türünü belirle
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        echo "  macOS: brew install docker"
-        echo "  Veya: https://www.docker.com/products/docker-desktop"
+        echo "  macOS: brew install --cask docker"
+        echo "  (Bu Docker Desktop kurar - hem CLI hem daemon)"
     elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
         echo "  Linux: sudo apt-get install docker.io docker-compose"
-        echo "  Veya: https://docs.docker.com/engine/install/"
     else
         echo "  Windows: https://www.docker.com/products/docker-desktop"
     fi
@@ -66,43 +64,67 @@ if ! command -v docker &> /dev/null; then
 fi
 
 # Docker daemon kontrol ve başlat
-DOCKER_READY=0
-for attempt in {1..3}; do
-    if docker ps &> /dev/null 2>&1; then
-        DOCKER_READY=1
-        echo "✅ Docker daemon çalışıyor"
-        break
-    fi
+if ! docker ps &> /dev/null 2>&1; then
+    echo "⏳ Docker daemon başlatılıyor..."
 
-    # Docker daemon çalışmıyorsa başlat
-    if [ $attempt -eq 1 ]; then
-        echo "⏳ Docker daemon başlatılıyor..."
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS - Docker Desktop'ı bul ve aç (farklı konumları dene)
+        DOCKER_STARTED=0
+        for DOCKER_APP in "/Applications/Docker.app" "$HOME/Applications/Docker.app" "$(mdfind 'kMDItemCFBundleIdentifier == "com.docker.docker"' 2>/dev/null | head -1)"; do
+            if [ -d "$DOCKER_APP" ]; then
+                open "$DOCKER_APP" 2>/dev/null && DOCKER_STARTED=1 && break
+            fi
+        done
 
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            # macOS - Docker Desktop'ı aç
+        # mdfind bulamadıysa open -a dene
+        if [ $DOCKER_STARTED -eq 0 ]; then
             open -a Docker 2>/dev/null || true
-            echo "   Waiting for Docker..."
-        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-            # Linux - systemctl ile başlat
-            sudo systemctl start docker 2>/dev/null || true
-            echo "   Starting Docker daemon..."
         fi
 
-        # Başlaması için bekle
-        sleep 10
-    fi
-done
+        echo "   Docker Desktop başlatılıyor, lütfen bekle..."
 
-# Hala çalışmazsa hata
-if [ $DOCKER_READY -eq 0 ]; then
-    echo "❌ Docker daemon çalışmıyor!"
+    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        sudo systemctl start docker 2>/dev/null || true
+        echo "   Docker daemon başlatılıyor..."
+    fi
+
+    # 90 saniyeye kadar bekle (Docker Desktop yavaş başlar)
+    WAIT=0
+    MAX=90
+    while [ $WAIT -lt $MAX ]; do
+        if docker ps &> /dev/null 2>&1; then
+            break
+        fi
+        echo -n "."
+        sleep 3
+        WAIT=$((WAIT + 3))
+    done
+    echo ""
+fi
+
+# Son kontrol
+if docker ps &> /dev/null 2>&1; then
+    echo "✅ Docker daemon çalışıyor"
+else
+    echo "❌ Docker daemon başlatılamadı!"
     echo ""
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        echo "   1. Applications → Docker açıl"
-        echo "   2. Başlaması bekleniyor (1-2 dakika)..."
-        echo "   3. bash install.sh tekrar çalıştır"
+        # Docker Desktop kurulu mu kontrol et
+        if ! ls /Applications/Docker.app &>/dev/null 2>&1 && ! mdfind 'kMDItemCFBundleIdentifier == "com.docker.docker"' 2>/dev/null | grep -q "."; then
+            echo "   ⚠️  Docker Desktop kurulu değil!"
+            echo "   Sadece Docker CLI yüklü - daemon için Desktop lazım."
+            echo ""
+            echo "   Kur: brew install --cask docker"
+            echo "   Sonra tekrar çalıştır: bash install.sh"
+        else
+            echo "   Docker Desktop kurulu ama başlatılamadı."
+            echo "   1. Dock'tan Docker simgesini tıklayarak aç"
+            echo "   2. Tamamen açıldıktan sonra tekrar çalıştır:"
+            echo "      bash install.sh"
+        fi
     elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
         echo "   sudo systemctl start docker"
+        echo "   Sonra tekrar: bash install.sh"
     fi
     exit 1
 fi
@@ -198,9 +220,13 @@ echo ""
 echo "📋 5/5 - Tarayıcı açılıyor..."
 echo ""
 
+sleep 1
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    sleep 1
     open "http://localhost:$PORT" 2>/dev/null || true
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    xdg-open "http://localhost:$PORT" 2>/dev/null || true
+elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+    start "http://localhost:$PORT" 2>/dev/null || true
 fi
 
 # ============================================================================
