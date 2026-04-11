@@ -5,18 +5,18 @@
 Bunu sadece **ilk defa** çalıştır. Docker, Git, Python3 otomatik kurulacak:
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/BeysolGit/hospital-archive/main/setup-dependencies.sh)
+bash <(curl -s https://raw.githubusercontent.com/BeysolGit/fotograf-arsivleme/main/setup-dependencies.sh)
 ```
 
-## ADIM 2: Hospital Archive Kurulsun
+## ADIM 2: Fotograf Arsivleme Kurulsun
 
 ```bash
 # Eski klasörü sil (varsa)
-rm -rf hospital-archive
+rm -rf fotograf-arsivleme
 
 # Yeni repository'i indir
-git clone https://github.com/BeysolGit/hospital-archive.git
-cd hospital-archive
+git clone https://github.com/BeysolGit/fotograf-arsivleme.git
+cd fotograf-arsivleme
 
 # Kurulumu başlat
 bash install.sh

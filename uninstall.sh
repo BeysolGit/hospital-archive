@@ -11,7 +11,7 @@ echo "Bu islem sunlari silecek:"
 echo "  - Tum Docker containerlari (immich, n8n, barcode-service)"
 echo "  - Tum Docker volumeleri (veritabani, yuklemeler)"
 echo "  - Tum Docker imajlari (indirilen dosyalar)"
-echo "  - hospital-archive network"
+echo "  - fotograf-arsivleme network"
 echo ""
 
 # Onay iste
@@ -33,7 +33,7 @@ echo "  Containerlar ve volumeler silindi"
 
 # 2. Build edilen imajlari sil
 echo "2/4 - Docker imajlari siliniyor..."
-docker rmi hospital-archive-barcode-service 2>/dev/null || true
+docker rmi fotograf-arsivleme-barcode-service 2>/dev/null || true
 docker rmi ghcr.io/immich-app/immich-server:release 2>/dev/null || true
 docker rmi tensorchord/pgvecto-rs:pg16-v0.2.1 2>/dev/null || true
 docker rmi redis:7-alpine 2>/dev/null || true

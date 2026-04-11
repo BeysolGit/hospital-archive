@@ -1,11 +1,11 @@
-# 🏥 Hospital Archive - KOLAY KURULUM REHBERI
+# 🏥 Fotograf Arsivleme - KOLAY KURULUM REHBERI
 
 ## 🚀 SUPER HIZLI KURULUM (3 seçenek)
 
 ### Seçenek 1: ULTRA OTOMATIK (Tavsiye Edilen)
 ```bash
-git clone https://github.com/BeysolGit/hospital-archive.git
-cd hospital-archive
+git clone https://github.com/BeysolGit/fotograf-arsivleme.git
+cd fotograf-arsivleme
 bash auto-setup.sh
 ```
 
@@ -21,8 +21,8 @@ bash auto-setup.sh
 
 ### Seçenek 2: STEP-BY-STEP (Denetimli)
 ```bash
-git clone https://github.com/BeysolGit/hospital-archive.git
-cd hospital-archive
+git clone https://github.com/BeysolGit/fotograf-arsivleme.git
+cd fotograf-arsivleme
 bash quick-install.sh
 ```
 
@@ -39,8 +39,8 @@ bash quick-install.sh
 ### Seçenek 3: MANUEL (Detaylı Kontrol)
 
 ```bash
-git clone https://github.com/BeysolGit/hospital-archive.git
-cd hospital-archive
+git clone https://github.com/BeysolGit/fotograf-arsivleme.git
+cd fotograf-arsivleme
 
 # 1. .env dosyasını düzenle
 vim .env

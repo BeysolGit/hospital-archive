@@ -10,7 +10,7 @@ export TERM=xterm
 clear
 
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║   🏥 Hospital Archive - WEB KURULUM                       ║"
+echo "║   🏥 Fotograf Arsivleme - WEB KURULUM                       ║"
 echo "║                                                            ║"
 echo "║   Tarayıcıdan tüm ayarları yap - Basit ve güvenli        ║"
 echo "╚════════════════════════════════════════════════════════════╝"

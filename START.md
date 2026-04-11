@@ -1,4 +1,4 @@
-# 🚀 BAŞLA - Hospital Archive Kurulumu
+# 🚀 BAŞLA - Fotograf Arsivleme Kurulumu
 
 **Sistem** henüz 3 yapı seçenek ile kurula var - **birini seç:**
 
@@ -8,7 +8,7 @@
 Hiçbir şey düşünme, sadece çalıştır.
 
 ```bash
-cd hospital-archive
+cd fotograf-arsivleme
 bash auto-setup.sh
 ```
 

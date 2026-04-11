@@ -136,4 +136,4 @@ volumes:
 
 networks:
   default:
-    name: hospital-archive
+    name: fotograf-arsivleme

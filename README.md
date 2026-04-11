@@ -31,7 +31,7 @@ Hastane ortamında çekilen hasta fotoğraflarını otomatik olarak arşivlemek 
 
 ### 1️⃣ Gereklilikler Kurulsun (İlk Defa)
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/BeysolGit/hospital-archive/main/setup-dependencies.sh)
+bash <(curl -s https://raw.githubusercontent.com/BeysolGit/fotograf-arsivleme/main/setup-dependencies.sh)
 ```
 
 Otomatik olarak kurur:
@@ -39,10 +39,10 @@ Otomatik olarak kurur:
 - ✅ Git
 - ✅ Python 3
 
-### 2️⃣ Hospital Archive Kurulsun
+### 2️⃣ Fotograf Arsivleme Kurulsun
 ```bash
-git clone https://github.com/BeysolGit/hospital-archive.git
-cd hospital-archive
+git clone https://github.com/BeysolGit/fotograf-arsivleme.git
+cd fotograf-arsivleme
 bash install.sh
 ```
 
@@ -77,7 +77,7 @@ Detaylı rehber: [KURULUM.md](KURULUM.md)
 
 ```bash
 # Proje klasörüne gir
-cd hospital-archive
+cd fotograf-arsivleme
 
 # .env dosyasını düzenle
 nano .env
@@ -259,7 +259,7 @@ docker exec barcode-service python -c "import easyocr; easyocr.Reader(['tr', 'en
 docker compose logs -f n8n
 
 # n8n veri klasörünü temizle (son çare)
-docker volume rm hospital-archive_n8n_data
+docker volume rm fotograf-arsivleme_n8n_data
 docker compose up -d n8n
 ```
 
@@ -292,7 +292,7 @@ docker compose up -d n8n
 ## Dosya Yapısı Finalı
 
 ```
-hospital-archive/
+fotograf-arsivleme/
 ├── docker-compose.yml           # Docker servisleri
 ├── .env                         # Konfigürasyon (gizli)
 ├── README.md                    # Bu dosya

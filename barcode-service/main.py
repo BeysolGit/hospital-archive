@@ -257,7 +257,7 @@ async def get_stats():
     """Get database statistics"""
     stats = db.get_stats()
     return {
-        "database": "hospital_archive",
+        "database": "fotograf_arsivleme",
         "stats": stats,
     }
 

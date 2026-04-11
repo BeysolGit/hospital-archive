@@ -15,8 +15,8 @@
 #### Kurulum (5 dakika)
 ```bash
 # Repository'i clone et
-git clone https://github.com/beysol/hospital-archive.git
-cd hospital-archive
+git clone https://github.com/beysol/fotograf-arsivleme.git
+cd fotograf-arsivleme
 
 # Kurulumu yap
 ./setup.sh
@@ -249,7 +249,7 @@ bash create_test_data.sh
 Test Execution Report
 ====================
 Date: YYYY-MM-DD
-System: hospital-archive
+System: fotograf-arsivleme
 Version: v1.0
 
 Services
@@ -322,7 +322,7 @@ Script ready for GitHub Actions:
 
 ```yaml
 # .github/workflows/test.yml
-name: Hospital Archive Tests
+name: Fotograf Arsivleme Tests
 on: [push, pull_request]
 
 jobs:

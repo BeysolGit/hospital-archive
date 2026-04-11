@@ -111,8 +111,8 @@ Hepsinin çıktısı görülüyorsa **hazırsın!**
 ## 🚀 Kuruluma Başla
 
 ```bash
-git clone https://github.com/BeysolGit/hospital-archive.git
-cd hospital-archive
+git clone https://github.com/BeysolGit/fotograf-arsivleme.git
+cd fotograf-arsivleme
 bash install.sh
 ```
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 🏥 Hospital Archive - ULTRA OTOMATIK KURULUM
+# 🏥 Fotograf Arsivleme - ULTRA OTOMATIK KURULUM
 # Hiçbir input gerekli değil - sadece çalıştır!
 # bash auto-setup.sh
 

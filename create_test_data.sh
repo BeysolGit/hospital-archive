@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Create test data for the Hospital Archive System
+# Create test data for the Fotograf Arsivleme System
 
 set -e
 

@@ -167,7 +167,7 @@ Barcode Image
 ## 🗂️ Dosya Yapısı
 
 ```
-hospital-archive/
+fotograf-arsivleme/
 │
 ├─ docker-compose.yml      # 5 servis tanımı
 ├─ .env                    # Konfigürasyon
@@ -214,8 +214,8 @@ hospital-archive/
 
 ### 1. Kur (5 dakika)
 ```bash
-git clone https://github.com/beysol/hospital-archive.git
-cd hospital-archive
+git clone https://github.com/beysol/fotograf-arsivleme.git
+cd fotograf-arsivleme
 ./setup.sh
 ```
 
@@ -396,7 +396,7 @@ http://localhost:2283/api        # Immich Swagger (login gerekli)
 ### Debug
 ```bash
 # Database kontrol
-docker exec barcode-service sqlite3 /app/data/hospital_archive.db
+docker exec barcode-service sqlite3 /app/data/fotograf_arsivleme.db
 SELECT COUNT(*) FROM photos;
 
 # Klasörler

@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import List, Optional, Dict, Any
 import json
 
-DB_PATH = Path("/app/data/hospital_archive.db")
+DB_PATH = Path("/app/data/fotograf_arsivleme.db")
 DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 

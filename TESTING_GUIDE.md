@@ -365,7 +365,7 @@ ls -lR /tmp/archive/
 
 set -e
 
-echo "🧪 Hospital Archive System Test Suite"
+echo "🧪 Fotograf Arsivleme System Test Suite"
 echo "======================================"
 echo ""
 

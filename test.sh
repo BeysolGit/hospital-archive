@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hospital Archive System - Automated Test Suite
+# Fotograf Arsivleme System - Automated Test Suite
 set -e
 
 COLOR_GREEN='\033[0;32m'

@@ -1,11 +1,11 @@
-# 🏥 Hospital Archive - KURULUM REHBERI
+# 🏥 Fotograf Arsivleme - KURULUM REHBERI
 
 ## ⚡ TEK KOMUT KURULUM
 
 ### ADIM 1: Repository'i İndir
 ```bash
-git clone https://github.com/BeysolGit/hospital-archive.git
-cd hospital-archive
+git clone https://github.com/BeysolGit/fotograf-arsivleme.git
+cd fotograf-arsivleme
 ```
 
 ### ADIM 2: Terminal'i Aç (Zaten açık)
@@ -25,8 +25,8 @@ Terminal'e sırasıyla yapıştır:
 
 ### 1️⃣ Repository'i İndir ve Klasöre Git
 ```bash
-git clone https://github.com/BeysolGit/hospital-archive.git
-cd hospital-archive
+git clone https://github.com/BeysolGit/fotograf-arsivleme.git
+cd fotograf-arsivleme
 ```
 
 ### 2️⃣ Kurulumu Başlat
@@ -140,11 +140,11 @@ bash test.sh
 # Doğru klasörde misin kontrol et
 pwd
 
-# Çıktı: .../hospital-archive olmalı
+# Çıktı: .../fotograf-arsivleme olmalı
 
 # Repository'i klone ettin mi?
-git clone https://github.com/BeysolGit/hospital-archive.git
-cd hospital-archive
+git clone https://github.com/BeysolGit/fotograf-arsivleme.git
+cd fotograf-arsivleme
 ```
 
 ### "Docker not found"

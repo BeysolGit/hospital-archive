@@ -3,7 +3,7 @@
 ## Adım 1: Test Script'ini Çalıştır
 
 ```bash
-cd hospital-archive
+cd fotograf-arsivleme
 
 # Otomatik sistem sağlık kontrolü
 ./test.sh
