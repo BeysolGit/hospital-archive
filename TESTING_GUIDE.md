@@ -405,7 +405,7 @@ chmod +x test_system.sh
 
 ### Manual Test
 
-1. n8n açıl: `http://localhost:5678`
+1. n8n acilir: `http://localhost:5678`
 2. Workflow 01 import et
 3. "Trigger manually" butonuna bas
 4. Execution history'de log'ları izle

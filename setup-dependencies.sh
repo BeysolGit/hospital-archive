@@ -6,7 +6,7 @@
 set -e
 
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║   🔧 BAĞIMLILIKLARI KURULTURUYOR                          ║"
+echo "║   🔧 BAGIMLILIKLAR KURULUYOR                               ║"
 echo "║                                                            ║"
 echo "║   Docker, Git, Python3 otomatik kurulacak                ║"
 echo "╚════════════════════════════════════════════════════════════╝"
@@ -232,7 +232,7 @@ echo ""
 if command -v docker &> /dev/null; then
     echo "✅ Docker: $(docker --version)"
 else
-    echo "❌ Docker: KURULUMUYOR"
+    echo "❌ Docker: KURULMADI"
     exit 1
 fi
 
@@ -240,7 +240,7 @@ fi
 if command -v git &> /dev/null; then
     echo "✅ Git: $(git --version)"
 else
-    echo "❌ Git: KURULUMUYOR"
+    echo "❌ Git: KURULMADI"
     exit 1
 fi
 
@@ -248,13 +248,13 @@ fi
 if command -v python3 &> /dev/null; then
     echo "✅ Python3: $(python3 --version)"
 else
-    echo "❌ Python3: KURULUMUYOR"
+    echo "❌ Python3: KURULMADI"
     exit 1
 fi
 
 echo ""
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║   🎉 TÜMLÜ GEREKLILIKLER KURULDU!                        ║"
+echo "║   🎉 TUM GEREKLILIKLER KURULDU!                           ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
 

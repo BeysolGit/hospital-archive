@@ -145,7 +145,7 @@ echo "✅ Klasörler hazır (Location: $WORK_DIR)"
 echo ""
 
 # ============================================================================
-# ADIM 3: DOCKER İMUŞLARINI İNDİR VE BAŞLAT
+# ADIM 3: DOCKER IMAJLARINI INDIR VE BASLAT
 # ============================================================================
 
 echo "📋 3/5 - Docker servisleri başlatılıyor..."

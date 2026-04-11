@@ -159,7 +159,7 @@ grep OPENROUTER .env
 
 ### "Immich API Key'i alamıyorum"
 ```bash
-# Web UI açıl ve manuel oluştur:
+# Web UI acilir ve manuel olustur:
 # 1. http://localhost:2283
 # 2. Settings → Account → API Keys → Create New Key
 # 3. .env dosyasında IMMICH_API_KEY'i güncelle

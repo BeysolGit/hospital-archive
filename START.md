@@ -42,7 +42,7 @@ Tüm adımları kendin yap, detaylı kontrol.
 
 1. `.env` dosyasını düzenle (OPENROUTER_API_KEY ekle)
 2. `docker compose up -d` çalıştır
-3. `http://localhost:2283` açıl (Immich)
+3. `http://localhost:2283` acilir (Immich)
 4. Admin hesap oluştur
 5. API Key al (Settings → Account → API Keys)
 6. `.env` dosyasında IMMICH_API_KEY'i güncelle

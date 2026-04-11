@@ -129,7 +129,7 @@ ls -la /tmp/archive/2026-04-10/Ahmet_Yilmaz/
    - Seç: `n8n-workflows/01_poll_and_route.json`
 
 3. **Manuel Tetikle:**
-   - Workflow açıl
+   - Workflow acilir
    - "Test" butonuna bas
    - Execution history'de logları izle
 
