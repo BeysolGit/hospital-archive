@@ -207,14 +207,12 @@ while [ $N8N_WAIT -lt 60 ]; do
     N8N_WAIT=$((N8N_WAIT + 2))
 done
 
-# Workflow dosyalarini import et
+# Workflow dosyalarini n8n container'ina kopyala ve import et
 for wf in "$WORK_DIR"/n8n-workflows/*.json; do
     if [ -f "$wf" ]; then
         WF_NAME=$(basename "$wf" .json)
-        RESULT=$(curl -sf -X POST http://localhost:5678/api/v1/workflows \
-            -H "Content-Type: application/json" \
-            -d @"$wf" 2>/dev/null)
-        if [ $? -eq 0 ]; then
+        docker cp "$wf" n8n:/tmp/workflow_import.json 2>/dev/null
+        if docker compose exec -T n8n n8n import:workflow --input=/tmp/workflow_import.json &>/dev/null; then
             echo "   ✅ $WF_NAME yuklendi"
         else
             echo "   ⚠️  $WF_NAME yuklenemedi (n8n'den manuel import et)"
