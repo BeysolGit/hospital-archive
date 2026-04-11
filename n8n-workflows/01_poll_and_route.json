@@ -21,7 +21,7 @@
     },
     {
       "parameters": {
-        "url": "http://immich-server:3001/api/search/metadata",
+        "url": "http://immich-server:2283/api/search/metadata",
         "method": "POST",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "httpCustomAuth",
@@ -91,7 +91,7 @@
     },
     {
       "parameters": {
-        "url": "=http://immich-server:3001/api/assets/{{ $json.id }}",
+        "url": "=http://immich-server:2283/api/assets/{{ $json.id }}",
         "method": "GET",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "httpCustomAuth",
@@ -115,7 +115,7 @@
     },
     {
       "parameters": {
-        "url": "=http://immich-server:3001/api/assets/{{ $json.id }}/original",
+        "url": "=http://immich-server:2283/api/assets/{{ $json.id }}/original",
         "method": "GET",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "httpCustomAuth",

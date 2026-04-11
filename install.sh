@@ -192,6 +192,39 @@ echo "✅ Docker servisleri çalışıyor"
 echo ""
 
 # ============================================================================
+# ADIM 3.5: N8N WORKFLOW IMPORT
+# ============================================================================
+
+echo "📋 n8n workflow'lari yukleniyor..."
+
+# n8n hazir olana kadar bekle
+N8N_WAIT=0
+while [ $N8N_WAIT -lt 60 ]; do
+    if curl -sf http://localhost:5678/healthz &>/dev/null; then
+        break
+    fi
+    sleep 2
+    N8N_WAIT=$((N8N_WAIT + 2))
+done
+
+# Workflow dosyalarini import et
+for wf in "$WORK_DIR"/n8n-workflows/*.json; do
+    if [ -f "$wf" ]; then
+        WF_NAME=$(basename "$wf" .json)
+        RESULT=$(curl -sf -X POST http://localhost:5678/api/v1/workflows \
+            -H "Content-Type: application/json" \
+            -d @"$wf" 2>/dev/null)
+        if [ $? -eq 0 ]; then
+            echo "   ✅ $WF_NAME yuklendi"
+        else
+            echo "   ⚠️  $WF_NAME yuklenemedi (n8n'den manuel import et)"
+        fi
+    fi
+done
+
+echo ""
+
+# ============================================================================
 # ADIM 4: SETUP WEB SAYFASINI HAZIRLA
 # ============================================================================
 
