@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 🏥 Hospital Archive - Otomatik Bağımlılık Kurulumu
+# Foto Arsiv - Otomatik Bağımlılık Kurulumu
 # Tüm gerekli yazılımları otomatik kur
 
 set -e

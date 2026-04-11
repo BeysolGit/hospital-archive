@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 🏥 Hospital Archive - ULTIMATE OTOMATIK KURULUM
+# Foto Arsiv - ULTIMATE OTOMATIK KURULUM
 # Tek komut: bash install.sh
 # Sistem otomatik kuruluyor, sonra web sayfası açılıyor - Hepsi bitti!
 
@@ -11,7 +11,7 @@ export TERM=xterm
 clear
 
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║   🏥 Hospital Archive - OTOMATIK KURULUM                  ║"
+echo "║   Foto Arsiv - OTOMATIK KURULUM                  ║"
 echo "║                                                            ║"
 echo "║   Sistem otomatik kuruluyor... Lütfen bekle (3-5 dk)     ║"
 echo "╚════════════════════════════════════════════════════════════╝"
