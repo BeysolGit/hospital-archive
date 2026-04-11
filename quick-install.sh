@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 🏥 Hospital Photo Archive - Super Kolay Kurulum
+# Fotograf Arsivleme - Super Kolay Kurulum
 # Tek komut: bash quick-install.sh
 # Sistem 5 dakikada hazır!
 
@@ -8,7 +8,7 @@ set -e
 
 clear
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║   🏥 Hospital Photo Archive - SUPER KOLAY KURULUM          ║"
+echo "║   Fotograf Arsivleme - SUPER KOLAY KURULUM          ║"
 echo "║                                                            ║"
 echo "║   Sistemin kurulumu başlıyor... (5-10 dakika)            ║"
 echo "╚════════════════════════════════════════════════════════════╝"

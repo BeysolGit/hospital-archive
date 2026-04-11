@@ -32,7 +32,7 @@ class PhotoDatabase:
                     patient_name TEXT,
                     doctor_name TEXT,
                     department TEXT,
-                    hospital_name TEXT,
+                    organization_name TEXT,
                     barcode_text TEXT,
                     archived INTEGER DEFAULT 0,
                     archive_path TEXT,
@@ -59,7 +59,7 @@ class PhotoDatabase:
         patient_name: Optional[str] = None,
         doctor_name: Optional[str] = None,
         department: Optional[str] = None,
-        hospital_name: Optional[str] = None,
+        organization_name: Optional[str] = None,
         barcode_text: Optional[str] = None,
     ) -> int:
         """Add or update a photo record"""
@@ -68,7 +68,7 @@ class PhotoDatabase:
             cursor.execute("""
                 INSERT OR REPLACE INTO photos
                 (immich_id, file_path, photo_type, taken_at, patient_name, doctor_name,
-                 department, hospital_name, barcode_text, updated_at)
+                 department, organization_name, barcode_text, updated_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
             """, (
                 immich_id,
@@ -78,7 +78,7 @@ class PhotoDatabase:
                 patient_name,
                 doctor_name,
                 department,
-                hospital_name,
+                organization_name,
                 barcode_text,
             ))
             conn.commit()

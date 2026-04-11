@@ -236,7 +236,7 @@
         "authentication": "none",
         "sendBody": true,
         "bodyParametersUi": "json",
-        "body": "={\n  \"barcode_immich_id\": \"{{ $json.id }}\",\n  \"patient_name\": \"{{ $json.patient_name }}\",\n  \"doctor_name\": \"{{ $json.doctor_name }}\",\n  \"date\": \"{{ $json.date }}\",\n  \"time\": \"{{ $json.time }}\",\n  \"department\": \"{{ $json.department }}\",\n  \"hospital\": \"{{ $json.hospital }}\",\n  \"decode_method\": \"{{ $node['Decode Barcode/OCR'].json.decode_method }}\"\n}"
+        "body": "={\n  \"barcode_immich_id\": \"{{ $json.id }}\",\n  \"patient_name\": \"{{ $json.patient_name }}\",\n  \"doctor_name\": \"{{ $json.doctor_name }}\",\n  \"date\": \"{{ $json.date }}\",\n  \"time\": \"{{ $json.time }}\",\n  \"department\": \"{{ $json.department }}\",\n  \"organization\": \"{{ $json.organization }}\",\n  \"decode_method\": \"{{ $node['Decode Barcode/OCR'].json.decode_method }}\"\n}"
       },
       "id": "h7i8j9k0-e1f2-g3h4-i5j6-7k8l9m0n1o2p",
       "name": "Trigger Barcode Processing (Webhook)",

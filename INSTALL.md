@@ -1,4 +1,4 @@
-# 🏥 Fotograf Arsivleme - KURULUM REHBERI
+# Fotograf Arsivleme - KURULUM REHBERI
 
 ## ⚡ TEK KOMUT KURULUM
 
@@ -218,7 +218,7 @@ bash test.sh
    - ±30 dakika içinde çekilen fotoğrafları eşleştirir
 
 3. **Arşiv Klasörü**
-   - Fotoğraflar: `/tmp/archive/YYYY-MM-DD/Hasta_Adi/`
+   - Fotoğraflar: `/tmp/archive/YYYY-MM-DD/Kisi_Adi/`
    - İstatistikler SQLite'da tutulur
 
 4. **API Key Ayarlarını Değiştir**

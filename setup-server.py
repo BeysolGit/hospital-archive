@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🏥 Fotograf Arsivleme - Kurulum Web Sunucusu
+Fotograf Arsivleme - Kurulum Web Sunucusu
 Web arayüzünden tüm ayarları yap
 """
 

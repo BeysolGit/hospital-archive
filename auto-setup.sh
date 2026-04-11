@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 🏥 Fotograf Arsivleme - ULTRA OTOMATIK KURULUM
+# Fotograf Arsivleme - ULTRA OTOMATIK KURULUM
 # Hiçbir input gerekli değil - sadece çalıştır!
 # bash auto-setup.sh
 
@@ -8,7 +8,7 @@ set -e
 
 clear
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║     🏥 Hospital Photo Archive - ULTRA OTOMATIK KURULUM     ║"
+echo "║     Fotograf Arsivleme - ULTRA OTOMATIK KURULUM     ║"
 echo "║                                                            ║"
 echo "║     ADIM 1: OpenRouter API Key (zorunlu)                 ║"
 echo "║     ADIM 2: Sistem otomatik kurulacak                    ║"

@@ -9,7 +9,7 @@ COLOR_YELLOW='\033[1;33m'
 COLOR_BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-echo -e "${COLOR_BLUE}🧪 Hospital Photo Archive System - Test Suite${NC}"
+echo -e "${COLOR_BLUE}🧪 Fotograf Arsivleme System - Test Suite${NC}"
 echo "=================================================="
 echo ""
 

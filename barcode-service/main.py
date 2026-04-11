@@ -1,5 +1,5 @@
 """
-FastAPI service for hospital photo archiving
+FastAPI service for fotograf archiving
 - Barcode detection and decoding
 - Photo indexing and matching
 - Archive management
@@ -34,7 +34,7 @@ MATCH_WINDOW_MINUTES = int(os.getenv("MATCH_WINDOW_MINUTES", "30"))
 ARCHIVE_PATH.mkdir(parents=True, exist_ok=True)
 UNMATCHED_PATH.mkdir(parents=True, exist_ok=True)
 
-app = FastAPI(title="Hospital Photo Archive Service", version="1.0.0")
+app = FastAPI(title="Fotograf Arsivleme Servisi", version="1.0.0")
 db: PhotoDatabase = get_db()
 
 
@@ -56,7 +56,7 @@ class ParsedBarcodeResponse(BaseModel):
     date: Optional[str] = None
     time: Optional[str] = None
     department: Optional[str] = None
-    hospital: Optional[str] = None
+    organization: Optional[str] = None
     confidence: float = 0.0
     error: Optional[str] = None
 
@@ -282,7 +282,7 @@ async def get_unmatched():
 
 @app.on_event("startup")
 async def startup():
-    logger.info("Hospital Photo Archive Service starting...")
+    logger.info("Fotograf Arsivleme Servisi starting...")
     logger.info(f"Archive path: {ARCHIVE_PATH}")
     logger.info(f"Unmatched path: {UNMATCHED_PATH}")
     logger.info(f"Match window: {MATCH_WINDOW_MINUTES} minutes")

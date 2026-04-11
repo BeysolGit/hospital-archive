@@ -1,4 +1,4 @@
-# 🏥 Fotograf Arsivleme - KOLAY KURULUM REHBERI
+# Fotograf Arsivleme - KOLAY KURULUM REHBERI
 
 ## 🚀 SUPER HIZLI KURULUM (3 seçenek)
 
@@ -203,8 +203,8 @@ docker compose restart n8n
    - Server: `http://<bilgisayar-ip>:2283`
 
 5. ✅ Gerçek test
-   - Hastane barkodu fotoğrafla
-   - Hasta fotoğrafı yükle
+   - Barkod fotoğrafla
+   - Fotograf yükle
    - Arşivde doğru klasöre gittiğini kontrol et
 
 ---

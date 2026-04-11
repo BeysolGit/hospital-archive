@@ -1,6 +1,6 @@
-# Hospital Photo Archiving System
+# Fotograf Arsivleme Sistemi
 
-Hastane ortamında çekilen hasta fotoğraflarını otomatik olarak arşivlemek için yerel, açık kaynaklı bir sistem.
+Cekilen fotograflari otomatik olarak arşivlemek için yerel, açık kaynaklı bir sistem.
 
 - **Immich**: Fotoğraf sunucusu + mobil sync
 - **n8n**: Orkestrasyon ve iş akışı
@@ -10,7 +10,7 @@ Hastane ortamında çekilen hasta fotoğraflarını otomatik olarak arşivlemek 
 ## Sistem Mimarisi
 
 ```
-[Hospital Phones]
+[Telefonlar]
     ↓ WiFi auto-sync via Immich App
 [Immich Server] ←── [PC: external library drop folder]
     ↓
@@ -178,12 +178,12 @@ Yanıt:
   "date": "2026-04-10",
   "time": "14:30:00",
   "department": "Radiology",
-  "hospital": "Central Hospital"
+  "organization": "Merkez"
 }
 ```
 
 ### `POST /photo/index`
-Hasta fotoğrafını SQLite'a kaydet
+Fotografi SQLite'a kaydet
 
 ```bash
 curl -X POST http://localhost:5001/photo/index \
@@ -274,7 +274,7 @@ docker compose up -d n8n
 1. Immich'e sorgu: son kontrol zamanından sonraki fotoğraflar
 2. Her fotoğrafı indir ve barcode-service'e gönder
 3. Eşer barkod → Workflow 02 tetikle
-4. Eğer hasta fotoğrafı → SQLite'a index
+4. Eğer fotograf → SQLite'a index
 
 ### Workflow 02 — Barcode Processing (Webhook tetiklemesi)
 1. Barkod metnini OpenRouter ile parse
@@ -332,4 +332,4 @@ fotograf-arsivleme/
 - [ ] Fuzzy matching iyileştirmesi (multiple matches durumunda)
 - [ ] E-posta bildirim integrasyonu
 - [ ] Dashboard/analytics (ne kadar fotoğraf arşivlendi, vs.)
-- [ ] Batch import desteği (CSV ile hasta bilgisi yükleme)
+- [ ] Batch import desteği (CSV ile kayit bilgisi yükleme)

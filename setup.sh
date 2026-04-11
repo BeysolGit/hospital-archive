@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 🏥 Hospital Photo Archive - KOLAY KURULUM
+# Fotograf Arsivleme - KOLAY KURULUM
 # Web tabanı kurulum arayüzü ile tüm ayarları yap
 
 set -e
@@ -10,7 +10,7 @@ export TERM=xterm
 clear
 
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║   🏥 Fotograf Arsivleme - WEB KURULUM                       ║"
+echo "║   Fotograf Arsivleme - WEB KURULUM                       ║"
 echo "║                                                            ║"
 echo "║   Tarayıcıdan tüm ayarları yap - Basit ve güvenli        ║"
 echo "╚════════════════════════════════════════════════════════════╝"

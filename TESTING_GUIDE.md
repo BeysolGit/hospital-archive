@@ -112,15 +112,15 @@ curl -F "file=@barcode.png" \
 
 **Seçenek 3: Text görüntü ile OCR test**
 ```bash
-# Metinli bir görseli kullan (hasta bilgisi yazılı)
-# "Hasta: Ahmet Yilmaz, Doktor: Dr. Fatma, Tarih: 2026-04-10"
+# Metinli bir görseli kullan (kayit bilgisi yazılı)
+# "Kisi: Ahmet Yilmaz, Doktor: Dr. Fatma, Tarih: 2026-04-10"
 
 curl -F "file=@text_image.jpg" \
   http://localhost:5001/decode
 
 # Beklenen yanıt (OCR ile):
 # {
-#   "decoded_text": "Hasta: Ahmet Yilmaz...",
+#   "decoded_text": "Kisi: Ahmet Yilmaz...",
 #   "decode_method": "ocr",
 #   "confidence": 0.75
 # }
@@ -139,7 +139,7 @@ curl -F "file=@barcode.jpg" \
 #   "date": "2026-04-10",
 #   "time": "14:30:00",
 #   "department": "Radiology",
-#   "hospital": "Central Hospital",
+#   "organization": "Merkez",
 #   "confidence": 0.8
 # }
 ```
@@ -168,7 +168,7 @@ curl -X POST -H "x-api-key: $IMMICH_API_KEY" \
 ### Test 3A: Photo Indexing
 
 ```bash
-# Hasta fotoğrafını SQLite'a index et
+# Fotografi SQLite'a index et
 curl -X POST http://localhost:5001/photo/index \
   -H "Content-Type: application/json" \
   -d '{
@@ -264,8 +264,8 @@ mkdir -p test-data
 
 # Test görselleri hazırla (veya indir):
 # - test_barcode.jpg   (barkod etiketi fotoğrafı)
-# - test_photo1.jpg    (hasta fotoğrafı 1)
-# - test_photo2.jpg    (hasta fotoğrafı 2)
+# - test_photo1.jpg    (fotograf 1)
+# - test_photo2.jpg    (fotograf 2)
 ```
 
 #### Adım 2: Barkod Fotoğrafını İşle
@@ -278,7 +278,7 @@ BARCODE_RESPONSE=$(curl -s -F "file=@test-data/test_barcode.jpg" \
 echo "Barcode Response:"
 echo $BARCODE_RESPONSE | jq '.'
 
-# Hasta adı ve zamanı not et
+# Kisi adi ve zamani not et
 PATIENT_NAME=$(echo $BARCODE_RESPONSE | jq -r '.patient_name')
 BARCODE_DATE=$(echo $BARCODE_RESPONSE | jq -r '.date')
 BARCODE_TIME=$(echo $BARCODE_RESPONSE | jq -r '.time')
@@ -287,7 +287,7 @@ echo "Patient: $PATIENT_NAME"
 echo "Date: $BARCODE_DATE at $BARCODE_TIME"
 ```
 
-#### Adım 3: Hasta Fotoğraflarını Index Et
+#### Adım 3: Fotograflari Index Et
 
 ```bash
 # Fotoğraf 1

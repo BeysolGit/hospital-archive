@@ -85,7 +85,7 @@ curl -F "file=@test-data/test_barcode_label.jpg" \
 test-data/
 ├── test_photo1.jpg              # EXIF: 2026-04-10T14:30:00Z
 ├── test_photo2.jpg              # EXIF: 2026-04-10T14:30:30Z
-├── test_barcode_label.jpg       # Turkish hospital barcode (OCR-friendly)
+├── test_barcode_label.jpg       # Turkish barkod (OCR-friendly)
 ├── test_qrcode.png              # (if qrencode installed)
 └── test_manifest.txt            # Testing instructions
 ```
@@ -97,7 +97,7 @@ test-data/
 - **Date:** 2026-04-10
 - **Time:** 14:30:00
 - **Department:** Radyoloji
-- **Hospital:** Merkez Hastanesi
+- **Kurum:** Merkez
 
 ---
 

@@ -50,7 +50,7 @@ def parse_barcode_with_llm(raw_text: str) -> Dict[str, Any]:
         "date": "YYYY-MM-DD",
         "time": "HH:MM:SS",
         "department": str,
-        "hospital": str,
+        "organization": str,
         "confidence": float (0-1),
         "raw_text": str,
         "error": str or None,
@@ -62,7 +62,7 @@ def parse_barcode_with_llm(raw_text: str) -> Dict[str, Any]:
         "date": None,
         "time": None,
         "department": None,
-        "hospital": None,
+        "organization": None,
         "confidence": 0.0,
         "raw_text": raw_text,
         "error": None,
@@ -79,7 +79,7 @@ def parse_barcode_with_llm(raw_text: str) -> Dict[str, Any]:
             base_url="https://openrouter.ai/api/v1",
         )
 
-        system_prompt = """You are a medical record parser specialized in extracting information from hospital barcode labels.
+        system_prompt = """You are a record parser specialized in extracting information from barkod labels.
 
 Your task is to parse the given text (which may be from OCR of a barcode label) and extract the following fields into JSON format:
 - patient_name: Full name of the patient
@@ -87,7 +87,7 @@ Your task is to parse the given text (which may be from OCR of a barcode label) 
 - date: Date in YYYY-MM-DD format
 - time: Time in HH:MM:SS format (if available)
 - department: Medical department name
-- hospital: Hospital name
+- organization: Organization name
 
 Return ONLY a valid JSON object with these fields. If a field cannot be found, set it to null.
 Be lenient with formatting variations. Examples:
@@ -135,8 +135,8 @@ Return only the JSON, no other text."""
         if parsed.get("department"):
             result["department"] = parsed["department"]
 
-        if parsed.get("hospital"):
-            result["hospital"] = parsed["hospital"]
+        if parsed.get("organization"):
+            result["organization"] = parsed["organization"]
 
         # Set confidence (LLM parsing is moderately confident)
         result["confidence"] = 0.8

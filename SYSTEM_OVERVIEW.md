@@ -1,8 +1,8 @@
-# 🏥 Hospital Photo Archiving System - Complete Overview
+# Fotograf Arsivleme Sistemi - Complete Overview
 
 ## Sistem Tanımı
 
-Hastane ortamında çekilen hasta fotoğraflarını **otomatik olarak arşivleyen**, tamamen **lokal**, **açık kaynaklı** bir sistem.
+Cekilen fotograflari **otomatik olarak arşivleyen**, tamamen **lokal**, **açık kaynaklı** bir sistem.
 
 ---
 
@@ -12,12 +12,12 @@ Hastane ortamında çekilen hasta fotoğraflarını **otomatik olarak arşivleye
 
 | Özellik | Açıklama |
 |---|---|
-| **Mobil Sync** | Hastane telefonları WiFi'ye bağlanınca otomatik foto yükleme |
-| **Barkod Okuma** | Fotoğraflanmış hasta barkodlarından bilgi çıkarma |
+| **Mobil Sync** | Telefonlar WiFi'ye bağlanınca otomatik foto yükleme |
+| **Barkod Okuma** | Fotoğraflanmış barkodlarından bilgi çıkarma |
 | **OCR** | El yazısı/basılı metinleri tanıma (Türkçe destekli) |
 | **LLM Parsing** | OpenRouter ile yapılandırılmış veri çıkarma |
 | **Zaman Eşleştirme** | ±30 dakika penceresinde fotoğraf eşleştirme |
-| **Otomatik Arşiv** | `Archive/YYYY-MM-DD/Hasta_Adı/` yapısına taşıma |
+| **Otomatik Arşiv** | `Archive/YYYY-MM-DD/Kisi_Adi/` yapısına taşıma |
 | **Web UI** | Immich'te web arayüzünden fotoğrafları görüntüleme |
 | **REST API** | Tüm işlemler için API endpointleri |
 
@@ -26,7 +26,7 @@ Hastane ortamında çekilen hasta fotoğraflarını **otomatik olarak arşivleye
 - Fotoğrafları buluta göndermez (gizlilik korunur)
 - Yüz tanıma yapmaz (istenmediyse)
 - SMS/email göndermiş
-- Hasta verilerini harici sistemlere iletmez
+- Verileri harici sistemlere iletmez
 
 ---
 
@@ -34,7 +34,7 @@ Hastane ortamında çekilen hasta fotoğraflarını **otomatik olarak arşivleye
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                   HASTANE ORTAMI                        │
+│                   CALISMA ORTAMI                        │
 ├─────────────────────────────────────────────────────────┤
 │                                                          │
 │  [Telefon 1]  [Telefon 2]  [PC Klasörü]                │
@@ -158,7 +158,7 @@ Barcode Image
       doctor_name,
       date, time,
       department,
-      hospital
+      organization
     }
 ```
 
@@ -292,10 +292,10 @@ http://localhost:5001 (barcode-service)
 
 ## 🔄 İş Akışı (Uçtan Uca)
 
-### Senaryo: Hasta Fotoğrafı Çekildi
+### Senaryo: Fotograf Cekildi
 
 ```
-1. Hastane telefonundan hasta fotoğrafı çekildi
+1. Telefondan fotograf çekildi
    ↓
 2. Telefon WiFi'ye bağlanınca Immich otomatik sync
    (Immich mobile app çalışıyor)
@@ -310,12 +310,12 @@ http://localhost:5001 (barcode-service)
      ↓
 5. Workflow 02: Barcode Processing
    - Barkod metnini OpenRouter Llama 3.1'e gönder
-   - LLM hasta adı, doktor, tarih vb. çıkart
+   - LLM kisi adi, doktor, tarih vb. çıkart
    - barcode-service'e çağrı: zaman penceresinde eşleşen fotoğrafları bul
    ↓
 6. Eşleştirme başarılı
-   - Tüm eşleşen fotoğrafları /archive/YYYY-MM-DD/Hasta_Adı/ taşı
-   - Immich'te hasta adına göre albüm oluştur
+   - Tüm eşleşen fotoğrafları /archive/YYYY-MM-DD/Kisi_Adi/ taşı
+   - Immich'te kisi adina göre albüm oluştur
    - Fotoğrafları albüme ekle
    ↓
 7. n8n Workflow 03 (Cleanup, her 15 dakikada)
@@ -325,7 +325,7 @@ http://localhost:5001 (barcode-service)
 8. SONUÇ
    - Archive/2026-04-10/Ahmet_Yilmaz/
      ├─ photo_1.jpg (até fotoğrafı)
-     ├─ photo_2.jpg (hasta fotoğrafı)
+     ├─ photo_2.jpg (fotograf)
      └─ barcode.jpg (barkod etiketi)
    
    - Immich'te "2026-04-10 — Ahmet Yilmaz" albümü
@@ -353,7 +353,7 @@ http://localhost:5001 (barcode-service)
    - Arşiv yapısı doğru mu?
 
 4. **Acceptance Tests** (Kabul)
-   - Gerçek hastane barkodu okuyabiliyor mu?
+   - Gerçek barkod okuyabiliyor mu?
    - Mobil sync gerçekten çalışıyor mu?
 
 ### Otomatik Test Suite
@@ -422,7 +422,7 @@ ls -la /tmp/unmatched/
 ### Kısa vadeli (1-2 hafta)
 - [ ] Üretim ortamında test et
 - [ ] Mobil cihazları kur
-- [ ] Gerçek hastane barkodlarıyla test
+- [ ] Gercek barkodlarla test
 - [ ] Kullanıcı eğitimi
 
 ### Orta vadeli (1-2 ay)

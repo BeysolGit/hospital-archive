@@ -25,7 +25,7 @@ Next steps:
 ## Adım 2: Test Verilerini Oluştur
 
 ```bash
-# Hasta fotoğrafı ve barkod etiketi oluştur
+# Fotograf ve barkod etiketi oluştur
 ./create_test_data.sh
 
 # Dosyalar test-data/ klasöründe oluşacak
@@ -69,7 +69,7 @@ curl -F "file=@test-data/test_barcode_label.jpg" \
   "date": "2026-04-10",
   "time": "14:30:00",
   "department": "Radyoloji",
-  "hospital": "Merkez Hastanesi",
+  "organization": "Merkez",
   "confidence": 0.8
 }
 ```
@@ -77,7 +77,7 @@ curl -F "file=@test-data/test_barcode_label.jpg" \
 ### Test 3C: Fotoğraf Index
 
 ```bash
-# Hasta fotoğrafını SQL'e kaydet
+# Fotografi SQL'e kaydet
 curl -X POST http://localhost:5001/photo/index \
   -H "Content-Type: application/json" \
   -d '{

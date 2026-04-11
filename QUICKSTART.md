@@ -73,9 +73,9 @@ bash install.sh
 
 ## 🎯 Kullanım:
 
-1. Hasta fotoğrafını Immich'ten çek (mobil/PC)
+1. Fotografi Immich'ten çek (mobil/PC)
 2. Barkod etiketini fotoğrafla
-3. Sistem otomatik arşivler: `/tmp/archive/YYYY-MM-DD/Hasta_Adi/`
+3. Sistem otomatik arşivler: `/tmp/archive/YYYY-MM-DD/Kisi_Adi/`
 
 ---
 

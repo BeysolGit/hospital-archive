@@ -101,21 +101,21 @@ python3 << 'PYTHON'
 from PIL import Image, ImageDraw
 from datetime import datetime
 
-# Create a hospital barcode label image (text-based)
+# Create a barkod label image (text-based)
 img = Image.new('RGB', (600, 400), color=(255, 255, 255))
 draw = ImageDraw.Draw(img)
 
-# Draw text like a hospital label
+# Draw text like a barkod etiketi
 label_text = """
-HEMŞİRELİK KLİNİĞİ - HASTA BARKODU
+BARKOD
 
-Hasta Adı: Ahmet Yilmaz
-Hasta ID: 12345
+Kisi Adi: Ahmet Yilmaz
+Kayit ID: 12345
 Doktor: Dr. Fatma Kaya
 Bölüm: Radyoloji
 Tarih: 10/04/2026
 Saat: 14:30:00
-Hastane: Merkez Hastanesi
+Kurum: Merkez
 Scan: [|||||| ]
 """
 
@@ -152,7 +152,7 @@ TEST DATA MANIFEST
 Images:
 - test_photo1.jpg      : Patient photo (2026-04-10 14:30:00)
 - test_photo2.jpg      : Patient photo (2026-04-10 14:30:30)
-- test_barcode_label.jpg : Barcode label (Turkish hospital format)
+- test_barcode_label.jpg : Barcode label (Turkish barkod format)
 - test_qrcode.png      : QR code (if qrencode installed)
 
 Patient Information:
@@ -160,7 +160,7 @@ Patient Information:
 - ID: 12345
 - Doctor: Dr. Fatma Kaya
 - Department: Radyoloji
-- Hospital: Merkez Hastanesi
+- Kurum: Merkez
 - Date: 2026-04-10
 - Time: 14:30:00
 

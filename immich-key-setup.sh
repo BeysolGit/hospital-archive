@@ -26,7 +26,7 @@ echo ""
 echo "👤 Admin hesabı oluşturuluyor..."
 
 ADMIN_PASSWORD="admin123"
-ADMIN_EMAIL="admin@hospital.local"
+ADMIN_EMAIL="admin@arsiv.local"
 
 # İlk admin user'ı oluştur
 API_RESPONSE=$(docker compose exec -T immich-server curl -s -X POST \
@@ -35,7 +35,7 @@ API_RESPONSE=$(docker compose exec -T immich-server curl -s -X POST \
   -d "{
     \"password\": \"$ADMIN_PASSWORD\",
     \"email\": \"$ADMIN_EMAIL\",
-    \"firstName\": \"Hospital\",
+    \"firstName\": \"Foto\",
     \"lastName\": \"Admin\"
   }" || echo "{}")
 
