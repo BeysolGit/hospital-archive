@@ -1,5 +1,4 @@
 services:
-  # Immich PostgreSQL Database (with pgvector support)
   immich-db:
     image: tensorchord/pgvecto-rs:pg16-v0.2.1
     container_name: immich-db
@@ -17,7 +16,6 @@ services:
       retries: 5
     restart: unless-stopped
 
-  # Immich Redis Cache
   immich-redis:
     image: redis:7-alpine
     container_name: immich-redis
@@ -28,7 +26,6 @@ services:
       retries: 5
     restart: unless-stopped
 
-  # Immich Server (API + Web UI + Microservices)
   immich-server:
     image: ghcr.io/immich-app/immich-server:release
     container_name: immich-server
@@ -57,43 +54,7 @@ services:
       retries: 10
       start_period: 30s
     restart: unless-stopped
-    # Machine Learning service intentionally EXCLUDED to save RAM
-    # Facial recognition and CLIP search not needed for barcode archiving
 
-  # n8n Workflow Orchestration
-  n8n:
-    image: n8nio/n8n:latest
-    container_name: n8n
-    depends_on:
-      immich-server:
-        condition: service_healthy
-    environment:
-      N8N_BASIC_AUTH_ACTIVE: "true"
-      N8N_BASIC_AUTH_USER: ${N8N_USER:-admin}
-      N8N_BASIC_AUTH_PASSWORD: ${N8N_PASSWORD:-password}
-      N8N_HOST: "0.0.0.0"
-      N8N_PORT: 5678
-      N8N_PROTOCOL: "http"
-      N8N_SECURE_COOKIE: "false"
-      WEBHOOK_TUNNEL_URL: "http://localhost:5678/"
-      TZ: Europe/Istanbul
-      GENERIC_TIMEZONE: Europe/Istanbul
-    volumes:
-      - n8n_data:/home/node/.n8n
-      - ${ARCHIVE_PATH:-./photos/archive}:/archive
-      - ${UNMATCHED_PATH:-./photos/unmatched}:/unmatched
-      - ${EXTERNAL_LIBRARY_PATH:-./photos/external}:/external:ro
-    ports:
-      - "5678:5678"
-    healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:5678/healthz"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
-    restart: unless-stopped
-
-  # Barcode Processing Service (FastAPI + zxing + EasyOCR)
   barcode-service:
     build:
       context: ./barcode-service
@@ -103,11 +64,15 @@ services:
       immich-server:
         condition: service_healthy
     environment:
+      IMMICH_URL: http://immich-server:2283
+      IMMICH_API_KEY: ${IMMICH_API_KEY}
       ARCHIVE_PATH: /archive
       UNMATCHED_PATH: /unmatched
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
       OPENROUTER_MODEL: ${OPENROUTER_MODEL:-meta-llama/llama-3.1-8b-instruct}
       MATCH_WINDOW_MINUTES: ${MATCH_WINDOW_MINUTES:-30}
+      EXTRACT_FIELDS: ${EXTRACT_FIELDS:-name,date}
+      POLL_INTERVAL_SECONDS: ${POLL_INTERVAL_SECONDS:-120}
       TZ: Europe/Istanbul
     volumes:
       - ${ARCHIVE_PATH:-./photos/archive}:/archive
@@ -128,8 +93,6 @@ volumes:
   immich_db:
     driver: local
   immich_uploads:
-    driver: local
-  n8n_data:
     driver: local
   barcode_db:
     driver: local

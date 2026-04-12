@@ -14,6 +14,17 @@ logger = logging.getLogger(__name__)
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "meta-llama/llama-3.1-8b-instruct")
+EXTRACT_FIELDS = os.getenv("EXTRACT_FIELDS", "name,date")
+
+# Mapping from user-facing field names to JSON keys
+FIELD_MAP = {
+    "name": ("patient_name", "Full name of the patient"),
+    "date": ("date", "Date in YYYY-MM-DD format"),
+    "time": ("time", "Time in HH:MM:SS format (if available)"),
+    "doctor": ("doctor_name", "Name of the doctor/physician"),
+    "department": ("department", "Medical department name"),
+    "organization": ("organization", "Organization name"),
+}
 
 
 def normalize_name(name: str) -> str:
@@ -79,15 +90,26 @@ def parse_barcode_with_llm(raw_text: str) -> Dict[str, Any]:
             base_url="https://openrouter.ai/api/v1",
         )
 
-        system_prompt = """You are a record parser specialized in extracting information from barkod labels.
+        # Build dynamic field list from EXTRACT_FIELDS env var
+        requested_fields = [f.strip() for f in EXTRACT_FIELDS.split(",") if f.strip()]
+        field_lines = []
+        for field_key in requested_fields:
+            if field_key in FIELD_MAP:
+                json_key, description = FIELD_MAP[field_key]
+                field_lines.append(f"- {json_key}: {description}")
+
+        # Always include name and date as minimum
+        if "name" not in requested_fields:
+            field_lines.insert(0, f"- patient_name: {FIELD_MAP['name'][1]}")
+        if "date" not in requested_fields:
+            field_lines.append(f"- date: {FIELD_MAP['date'][1]}")
+
+        fields_text = "\n".join(field_lines)
+
+        system_prompt = f"""You are a record parser specialized in extracting information from barcode labels.
 
 Your task is to parse the given text (which may be from OCR of a barcode label) and extract the following fields into JSON format:
-- patient_name: Full name of the patient
-- doctor_name: Name of the doctor/physician
-- date: Date in YYYY-MM-DD format
-- time: Time in HH:MM:SS format (if available)
-- department: Medical department name
-- organization: Organization name
+{fields_text}
 
 Return ONLY a valid JSON object with these fields. If a field cannot be found, set it to null.
 Be lenient with formatting variations. Examples:

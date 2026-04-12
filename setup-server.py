@@ -70,8 +70,8 @@ class SetupHandler(SimpleHTTPRequestHandler):
             'IMMICH_API_KEY': data.get('immichApiKey', ''),
             'ARCHIVE_PATH': data.get('archivePath', './photos/archive'),
             'UNMATCHED_PATH': data.get('unmatchedPath', './photos/unmatched'),
-            'N8N_PASSWORD': data.get('n8nPassword', 'admin123'),
             'MATCH_WINDOW_MINUTES': str(data.get('matchWindow', '30')),
+            'EXTRACT_FIELDS': data.get('extractFields', 'name,date'),
         }
 
         lines = env_content.split('\n') if env_content else []

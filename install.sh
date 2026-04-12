@@ -173,7 +173,7 @@ MAX_WAIT=180
 
 while [ $WAIT_TIME -lt $MAX_WAIT ]; do
     if docker compose exec -T immich-server curl -sf http://localhost:2283/api/server/ping &>/dev/null && \
-       docker compose exec -T n8n wget -q --spider http://localhost:5678/healthz &>/dev/null; then
+       docker compose exec -T barcode-service curl -sf http://localhost:5000/health &>/dev/null; then
         echo "   ✅ Tüm servisler hazır!"
         break
     fi
@@ -189,37 +189,6 @@ if [ $WAIT_TIME -ge $MAX_WAIT ]; then
 fi
 
 echo "✅ Docker servisleri çalışıyor"
-echo ""
-
-# ============================================================================
-# ADIM 3.5: N8N WORKFLOW IMPORT
-# ============================================================================
-
-echo "📋 n8n workflow'lari yukleniyor..."
-
-# n8n hazir olana kadar bekle
-N8N_WAIT=0
-while [ $N8N_WAIT -lt 60 ]; do
-    if curl -sf http://localhost:5678/healthz &>/dev/null; then
-        break
-    fi
-    sleep 2
-    N8N_WAIT=$((N8N_WAIT + 2))
-done
-
-# Workflow dosyalarini n8n container'ina kopyala ve import et
-for wf in "$WORK_DIR"/n8n-workflows/*.json; do
-    if [ -f "$wf" ]; then
-        WF_NAME=$(basename "$wf" .json)
-        docker cp "$wf" n8n:/tmp/workflow_import.json 2>/dev/null
-        if docker compose exec -T n8n n8n import:workflow --input=/tmp/workflow_import.json &>/dev/null; then
-            echo "   ✅ $WF_NAME yuklendi"
-        else
-            echo "   ⚠️  $WF_NAME yuklenemedi (n8n'den manuel import et)"
-        fi
-    fi
-done
-
 echo ""
 
 # ============================================================================
@@ -292,8 +261,8 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 echo "🚀 Sonrasında:"
 echo "   📸 Immich: http://localhost:2283"
-echo "   ⚙️  n8n: http://localhost:5678"
 echo "   📚 API: http://localhost:5001/docs"
+echo "   📊 Durum: http://localhost:5001/status"
 echo ""
 echo "📱 Mobil:"
 echo "   Immich App indir → Server: http://<bilgisayar-ip>:2283"

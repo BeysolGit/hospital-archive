@@ -48,6 +48,15 @@ class PhotoDatabase:
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_photo_type ON photos(photo_type)")
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_immich_id ON photos(immich_id)")
 
+            # Polling state table
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS poll_state (
+                    id INTEGER PRIMARY KEY CHECK (id = 1),
+                    last_poll_at DATETIME,
+                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+
             conn.commit()
 
     def add_photo(
@@ -168,6 +177,26 @@ class PhotoDatabase:
         """Move unmatched barcodes to archive/unmatched folder"""
         unmatched = self.find_unmatched_barcodes(older_than_minutes)
         return unmatched
+
+    def get_poll_timestamp(self) -> Optional[datetime]:
+        """Get the last poll timestamp."""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT last_poll_at FROM poll_state WHERE id = 1")
+            row = cursor.fetchone()
+            if row and row[0]:
+                return datetime.fromisoformat(row[0])
+            return None
+
+    def set_poll_timestamp(self, timestamp: datetime):
+        """Set the last poll timestamp."""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT OR REPLACE INTO poll_state (id, last_poll_at, updated_at)
+                VALUES (1, ?, CURRENT_TIMESTAMP)
+            """, (timestamp.isoformat(),))
+            conn.commit()
 
     def get_stats(self) -> Dict[str, Any]:
         """Get database statistics"""

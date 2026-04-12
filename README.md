@@ -38,8 +38,8 @@ bash uninstall.sh
 | Servis | Adres |
 |---|---|
 | Immich | http://localhost:2283 |
-| n8n | http://localhost:5678 |
 | Barkod API | http://localhost:5001/docs |
+| Sistem Durumu | http://localhost:5001/status |
 
 ## Mobil
 

@@ -88,6 +88,14 @@
         }
         .success .links a:hover { background: #eef; }
         .success .links a span { color: #999; font-size: 13px; display: block; margin-top: 2px; }
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+        .checkbox-label {
+            display: flex; align-items: center; gap: 6px;
+            padding: 8px 12px; background: #f5f5f5; border-radius: 6px;
+            font-size: 14px; cursor: pointer; user-select: none;
+        }
+        .checkbox-label:hover { background: #eef; }
+        .checkbox-label input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
         .required { color: #ef4444; }
         @media (max-width: 600px) { .container { padding: 30px; } .header h1 { font-size: 26px; } }
     </style>
@@ -122,8 +130,32 @@
             <div class="advanced">
                 <div class="form-group">
                     <label>Immich API Key</label>
-                    <input type="password" id="immichApiKey" placeholder="Kurulumdan sonra otomatik alinir">
-                    <p class="help-text">Bos birakirsan kurulumdan sonra ayarlanir</p>
+                    <input type="password" id="immichApiKey" placeholder="Kurulumdan sonra Immich'ten al">
+                    <p class="help-text">Immich → Settings → API Keys → Create</p>
+                </div>
+                <div class="form-group">
+                    <label>Cikarilacak Alanlar</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="fieldName" checked disabled> Isim (zorunlu)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="fieldDate" checked disabled> Tarih (zorunlu)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="fieldTime"> Saat
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="fieldDoctor"> Doktor
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="fieldDepartment"> Bolum
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="fieldOrganization"> Kurum
+                        </label>
+                    </div>
+                    <p class="help-text">Barkod etiketinden cikarilacak bilgiler</p>
                 </div>
                 <div class="form-group">
                     <label>Arsiv Klasoru</label>
@@ -132,10 +164,6 @@
                 <div class="form-group">
                     <label>Eslesmeyenler Klasoru</label>
                     <input type="text" id="unmatchedPath" value="./photos/unmatched">
-                </div>
-                <div class="form-group">
-                    <label>n8n Sifre</label>
-                    <input type="password" id="n8nPassword" value="admin123">
                 </div>
                 <div class="form-group">
                     <label>Zaman Penceresi (dakika)</label>
@@ -158,13 +186,13 @@
                     Immich - Fotograf Yonetimi
                     <span>Admin hesap olustur, mobil uygulamayi bagla</span>
                 </a>
-                <a href="http://localhost:5678" target="_blank">
-                    n8n - Workflow Otomasyonu
-                    <span>Arsivleme akislari otomatik yuklendi</span>
-                </a>
                 <a href="http://localhost:5001/docs" target="_blank">
                     Barkod API
                     <span>Barkod okuma ve eslestirme servisi</span>
+                </a>
+                <a href="http://localhost:5001/status" target="_blank">
+                    Sistem Durumu
+                    <span>Polling durumu ve istatistikler</span>
                 </a>
             </div>
         </div>
@@ -190,13 +218,20 @@
             form.style.display = 'none';
             loadingDiv.style.display = 'block';
 
+            // Build extract fields from checkboxes
+            const fields = ['name', 'date'];
+            if (document.getElementById('fieldTime').checked) fields.push('time');
+            if (document.getElementById('fieldDoctor').checked) fields.push('doctor');
+            if (document.getElementById('fieldDepartment').checked) fields.push('department');
+            if (document.getElementById('fieldOrganization').checked) fields.push('organization');
+
             const data = {
                 openrouterKey: key,
                 immichApiKey: document.getElementById('immichApiKey').value.trim(),
                 archivePath: document.getElementById('archivePath').value,
                 unmatchedPath: document.getElementById('unmatchedPath').value,
-                n8nPassword: document.getElementById('n8nPassword').value,
-                matchWindow: document.getElementById('matchWindow').value
+                matchWindow: document.getElementById('matchWindow').value,
+                extractFields: fields.join(',')
             };
 
             try {

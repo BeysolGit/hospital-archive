@@ -8,7 +8,7 @@ echo "║   Foto Arsiv - KALDIRMA                                   ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
 echo "Bu islem sunlari silecek:"
-echo "  - Tum Docker containerlari (immich, n8n, barcode-service)"
+echo "  - Tum Docker containerlari (immich, barcode-service)"
 echo "  - Tum Docker volumeleri (veritabani, yuklemeler)"
 echo "  - Tum Docker imajlari (indirilen dosyalar)"
 echo "  - fotograf-arsivleme network"
@@ -37,7 +37,6 @@ docker rmi fotograf-arsivleme-barcode-service 2>/dev/null || true
 docker rmi ghcr.io/immich-app/immich-server:release 2>/dev/null || true
 docker rmi tensorchord/pgvecto-rs:pg16-v0.2.1 2>/dev/null || true
 docker rmi redis:7-alpine 2>/dev/null || true
-docker rmi n8nio/n8n:latest 2>/dev/null || true
 echo "  Imajlar silindi"
 
 # 3. Olusturulan klasorleri sil

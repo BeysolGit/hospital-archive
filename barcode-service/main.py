@@ -21,6 +21,7 @@ import exifread
 from db import get_db, PhotoDatabase
 from decoder import smart_decode
 from llm_parser import parse_barcode_with_llm, format_patient_folder_name, fuzzy_match_patient
+from poller import get_poller
 
 # Logging
 logging.basicConfig(level=logging.INFO)
@@ -226,7 +227,7 @@ async def archive_photos(request: ArchiveRequest):
             db.mark_archived(
                 immich_id=immich_id,
                 archive_path=str(archive_folder),
-                album_id=None,  # Set by n8n after creating Immich album
+                album_id=None,
             )
             archived_files.append(immich_id)
 
@@ -262,6 +263,13 @@ async def get_stats():
     }
 
 
+@app.get("/status")
+async def get_poller_status():
+    """Get poller status — last poll time, photos processed, etc."""
+    poller = get_poller()
+    return poller.get_status()
+
+
 @app.get("/cleanup")
 async def get_unmatched():
     """
@@ -288,6 +296,10 @@ async def startup():
     logger.info(f"Match window: {MATCH_WINDOW_MINUTES} minutes")
     stats = db.get_stats()
     logger.info(f"Database stats: {stats}")
+
+    # Start background Immich poller
+    poller = get_poller()
+    poller.start()
 
 
 if __name__ == "__main__":
